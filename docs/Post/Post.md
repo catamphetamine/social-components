@@ -1,4 +1,6 @@
-A post has:
+## Post
+
+A post can have:
 
 * `author`
 * `date: Date`
