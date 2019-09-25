@@ -15,7 +15,7 @@ function getPostPreviewTest(post, options, expected) {
 	expectToEqual(generatePostPreview(post.content, post.attachments, options), expected)
 }
 
-describe('getPostText', () => {
+describe('generatePostPreview', () => {
 	it('should return `undefined` if no preview is required (when post is small enough)', () => {
 		getPostPreviewTest(
 			[

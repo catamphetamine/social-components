@@ -7,7 +7,7 @@ function getPostTextTest(post, options, text) {
 		text = options
 		options = {}
 	}
-	expectToEqual(getPostText(post.content, post.attachments, options), text)
+	expectToEqual(getPostText(post, options), text)
 }
 
 describe('getPostText', () => {

@@ -1,14 +1,14 @@
 import getPostText from './getPostText'
 import trimText from './trimText'
 
-export default function getPostSummary(content, attachments, {
+export default function getPostSummary({ content, attachments }, {
 	messages,
 	maxLength,
 	stopOnNewLine,
 	countNewLines,
 	fitFactor
 }) {
-	let text = getPostText(content, attachments, {
+	let text = getPostText({ content, attachments }, {
 		skipPostQuotes: true,
 		// skipCodeBlocks: true,
 		softLimit: maxLength,
@@ -19,7 +19,7 @@ export default function getPostSummary(content, attachments, {
 	// If the generated post preview is empty
 	// then loosen the filters and include post quotes.
 	if (!text) {
-		text = getPostText(content, attachments, {
+		text = getPostText({ content, attachments }, {
 			skipPostQuotes: false,
 			// skipCodeBlocks: true,
 			softLimit: maxLength,
