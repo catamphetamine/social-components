@@ -72,48 +72,67 @@ describe('getPostText', () => {
 		)
 	})
 
-	it('should exclude quotes when "excludeQuotes" is "true"', () => {
-		getPostTextTest(
-			{
-				content:
-				[
-					[
-						{
-							type: 'quote',
-							content: 'Quote'
-						},
-						'\n',
-						'Abc'
-					]
-				]
-			},
-			{
-				excludeQuotes: true
-			},
-			'Abc'
-		)
+	// it('should exclude quotes when "excludeQuotes" is "true"', () => {
+	// 	getPostTextTest(
+	// 		{
+	// 			content:
+	// 			[
+	// 				[
+	// 					{
+	// 						type: 'quote',
+	// 						content: 'Quote'
+	// 					},
+	// 					'\n',
+	// 					'Abc'
+	// 				]
+	// 			]
+	// 		},
+	// 		{
+	// 			excludeQuotes: true
+	// 		},
+	// 		'Abc'
+	// 	)
 
-		getPostTextTest(
-			{
-				content:
-				[
-					{
-						type: 'quote',
-						content: 'Quote'
-					},
-					[
-						'Abc'
-					]
-				]
-			},
-			{
-				excludeQuotes: true
-			},
-			'Abc'
-		)
-	})
+	// 	getPostTextTest(
+	// 		{
+	// 			content:
+	// 			[
+	// 				{
+	// 					type: 'quote',
+	// 					content: 'Quote'
+	// 				},
+	// 				[
+	// 					'Abc'
+	// 				]
+	// 			]
+	// 		},
+	// 		{
+	// 			excludeQuotes: true
+	// 		},
+	// 		'Abc'
+	// 	)
+	// })
 
-	it('shouldn\'t exclude quotes when "excludeQuotes" is not passed', () => {
+	// it('shouldn\'t exclude quotes when "excludeQuotes" is not passed', () => {
+	// 	getPostTextTest(
+	// 		{
+	// 			content:
+	// 			[
+	// 				[
+	// 					{
+	// 						type: 'quote',
+	// 						content: 'Quote'
+	// 					},
+	// 					'\n',
+	// 					'Abc'
+	// 				]
+	// 			]
+	// 		},
+	// 		'«Quote»\nAbc'
+	// 	)
+	// })
+
+	it('should convert quotes to text', () => {
 		getPostTextTest(
 			{
 				content:
@@ -525,39 +544,39 @@ describe('getPostText', () => {
 		)
 	})
 
-	it('shouldn\'t return attachment placeholder when there\'s no post text and "ignoreAttachments" is "true"', () => {
-		getPostTextTest(
-			{
-				content: [
-					{
-						type: 'attachment',
-						attachmentId: 1
-					},
-					{
-						type: 'attachment',
-						attachmentId: 2
-					}
-				],
-				attachments: [{
-					id: 1,
-					type: 'video',
-					video: {}
-				}, {
-					id: 2,
-					type: 'picture',
-					picture: {}
-				}]
-			},
-			{
-				messages: {
-					picture: 'Picture',
-					video: 'Video'
-				},
-				ignoreAttachments: true
-			},
-			''
-		)
-	})
+	// it('shouldn\'t return attachment placeholder when there\'s no post text and "ignoreAttachments" is "true"', () => {
+	// 	getPostTextTest(
+	// 		{
+	// 			content: [
+	// 				{
+	// 					type: 'attachment',
+	// 					attachmentId: 1
+	// 				},
+	// 				{
+	// 					type: 'attachment',
+	// 					attachmentId: 2
+	// 				}
+	// 			],
+	// 			attachments: [{
+	// 				id: 1,
+	// 				type: 'video',
+	// 				video: {}
+	// 			}, {
+	// 				id: 2,
+	// 				type: 'picture',
+	// 				picture: {}
+	// 			}]
+	// 		},
+	// 		{
+	// 			messages: {
+	// 				picture: 'Picture',
+	// 				video: 'Video'
+	// 			},
+	// 			ignoreAttachments: true
+	// 		},
+	// 		''
+	// 	)
+	// })
 
 	it('should get post text when social attachments are present', () => {
 		getPostTextTest(
@@ -606,23 +625,33 @@ describe('getPostText', () => {
 		)
 	})
 
-	it('should replace code with (code) when `excludeCodeBlocks` is `true`', () => {
+	it('should shorten code blocks', () => {
 		getPostTextTest(
 			{
 				content: [
 					[{
 						type: 'code',
-						content: 'Abc'
+						content: 'console.log("first line")\nconsole.log("second line")'
 					}]
 				]
 			},
+			undefined,
+			'console.log("first line")'
+		)
+	})
+
+	it('shouldn\'t shorten single-line code blocks', () => {
+		getPostTextTest(
 			{
-				messages: {
-					code: 'Code'
-				},
-				excludeCodeBlocks: true
+				content: [
+					[{
+						type: 'code',
+						content: 'console.log("first line")'
+					}]
+				]
 			},
-			'(code)'
+			undefined,
+			'console.log("first line")'
 		)
 	})
 

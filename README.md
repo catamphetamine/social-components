@@ -10,16 +10,7 @@ Some experiments with common social service concepts such as a "post", its data 
 npm install social-components --save
 ```
 
-This library uses `async`/`await` syntax so including `regenerator-runtime` is required when using it. That usually means either including `babel-polyfill` (Babel 6) or `@babel/polyfill` (Babel 7). Since Babel `7.4.0` `@babel/polyfill` [has been deprecated](https://babeljs.io/docs/en/babel-polyfill) and should be replaced with `core-js` and `regenerator-runtime`:
-
-```
-npm install core-js regenerator-runtime --save
-```
-
-```js
-import "core-js/stable"
-import "regenerator-runtime/runtime"
-```
+This library uses `async`/`await` syntax so including `regenerator-runtime/runtime` is required when using it. In Node.js that usually means including `@babel/runtime`. In a web browser that usually means including `@babel/polyfill` (though starting from Babel `7.4.0` `@babel/polyfill` [has been deprecated](https://babeljs.io/docs/en/babel-polyfill) in favor of manually including `core-js/stable` and `regenerator-runtime/runtime`).
 
 ## Use
 

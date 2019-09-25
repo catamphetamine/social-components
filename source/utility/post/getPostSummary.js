@@ -9,38 +9,24 @@ export default function getPostSummary(content, attachments, {
 	fitFactor
 }) {
 	let text = getPostText(content, attachments, {
-		excludePostQuotes: true,
-		excludeCodeBlocks: true,
+		skipPostQuotes: true,
+		// skipCodeBlocks: true,
 		softLimit: maxLength,
 		stopOnNewLine,
 		// `messages` are optional.
 		messages
 	})
 	// If the generated post preview is empty
-	// then loosen the filters and include quotes.
-	// Code blocks are replaced with "(code)".
+	// then loosen the filters and include post quotes.
 	if (!text) {
 		text = getPostText(content, attachments, {
-			excludePostQuotes: false,
-			excludeCodeBlocks: true,
+			skipPostQuotes: false,
+			// skipCodeBlocks: true,
 			softLimit: maxLength,
 			stopOnNewLine,
 			// `messages` are optional.
 			messages
 		})
-		// If the generated post preview is empty
-		// then loosen the filters and include quotes.
-		// Code blocks are always replaced with "(code)".
-		if (!text) {
-			text = getPostText(content, attachments, {
-				excludePostQuotes: false,
-				excludeCodeBlocks: false,
-				softLimit: maxLength,
-				stopOnNewLine,
-				// `messages` are optional.
-				messages
-			})
-		}
 	}
 	if (text) {
 		// Return the quoted post text abstract.
