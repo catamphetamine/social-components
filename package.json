@@ -52,7 +52,7 @@
     "build:clean": "rimraf ./commonjs/**/* ./modules/**/*",
     "build:commonjs": "cross-env babel ./source --out-dir ./commonjs --source-maps --ignore *.test.js",
     "build:es6": "cross-env BABEL_ENV=es6 babel ./source --out-dir ./modules --source-maps --ignore *.test.js",
-    "build": "npm-run-all build:clean build:commonjs build:es6 build:browser",
+    "build": "npm-run-all build:clean build:commonjs build:es6",
     "prepublish": "npm-run-all build test"
   },
   "repository": {
