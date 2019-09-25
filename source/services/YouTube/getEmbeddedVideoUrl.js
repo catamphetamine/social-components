@@ -1,3 +1,5 @@
+import { getUrlQueryPart } from '../../utility/url'
+
 export default function getEmbeddedVideoUrl(id, options = {}) {
 	const parameters = {}
 	if (options.autoPlay) {

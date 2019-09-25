@@ -34,10 +34,17 @@ import "regenerator-runtime/runtime"
 * [PostContentTypes](https://github.com/catamphetamine/social-components/blob/master/docs/Post/PostContentTypes.md)
 * [PostAttachments](https://github.com/catamphetamine/social-components/blob/master/docs/Post/PostAttachments.md)
 
+## Services
+
+* [YouTube](https://youtube.com) — Get video by URL or id.
+* [Vimeo](https://youtube.com) — Get video by URL or id.
+* [Instagram](https://instagram.com) — Get post by URL or id.
+* [Twitter](https://twitter.com) — Get tweet by URL or id.
+
 ## To do
 
 * `source/services/YouTube/getVideo.js` and `source/services/Vimeo/getVideo.js` both use `fetch()` global function which isn't supported in Node.js. Developers using this package could optionally polyfill `fetch()` on server side (for example, see `/fetch-polyfill`).
-* `source/services/Twitter/getTweet.js` and `source/services/Instagram/getTweet.js` both use `fetch-jsonp` which doesn't work in Node.js. Some tests are skipped because of that (`describe.skip()`). Maybe somehow substitute `fetch-jsonp` for server side.
+* `source/services/Twitter/getTweet.js` and `source/services/Instagram/getPost.js` both use `fetch-jsonp` which doesn't work in Node.js. Some tests are skipped because of that (`describe.skip()`). Maybe somehow substitute `fetch-jsonp` for server side.
 
 ## License
 

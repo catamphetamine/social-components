@@ -1,7 +1,5 @@
 import getVideo from './getVideo'
 
-import { getUrlQueryPart } from '../../utility/url'
-
 /**
  * Parses `vimeo.com` video by URL.
  * Supported URL formats:

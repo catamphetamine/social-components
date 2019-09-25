@@ -1,4 +1,4 @@
-import { getMinSize } from '../picture'
+import getMinSize from '../picture/getMinSize'
 import isEmbeddedAttachment from './isEmbeddedAttachment'
 import getSortedAttachments from './getSortedAttachments'
 // import countPostBlockCharacters from './countPostBlockCharacters'

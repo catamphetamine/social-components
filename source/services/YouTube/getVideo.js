@@ -1,6 +1,5 @@
 import { parseQueryString } from '../../utility/url'
 import getImageSize from '../../utility/image/getImageSize'
-import { getUrlQueryPart } from '../../utility/url'
 
 export default async function getVideo(id, { locale, picture, youTubeApiKey, startAt }) {
 	let video

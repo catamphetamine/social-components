@@ -1,4 +1,4 @@
-import getTweet, { getTweetId } from '../../services/Twitter/getTweet'
+import getTweetByUrl from '../../services/Twitter/getTweetByUrl'
 import visitPostParts from './visitPostParts'
 
 /**
@@ -24,11 +24,7 @@ async function parseTwitterLink(link, { messages }) {
 	if (link.attachment) {
 		return
 	}
-	const tweetId = getTweetId(link.url)
-	if (!tweetId) {
-		return
-	}
-	const tweet = await getTweet(tweetId, { messages })
+	const tweet = await getTweetByUrl(link.url, { messages })
 	if (tweet) {
 		link.attachment = {
 			type: 'social',

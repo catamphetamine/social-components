@@ -1,5 +1,5 @@
 import getContentBlocks from './getContentBlocks'
-import { getThumbnailSize } from './attachment'
+import getThumbnailSize from '../attachment/getThumbnailSize'
 
 /**
  * Sorts post attachments in the order they appear embedded in the post

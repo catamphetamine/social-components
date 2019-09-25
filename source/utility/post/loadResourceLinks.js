@@ -4,8 +4,8 @@ import loadYouTubeLinks from './loadYouTubeLinks'
 import loadTwitterLinks from './loadTwitterLinks'
 import expandStandaloneAttachmentLinks from './expandStandaloneAttachmentLinks'
 import generatePostPreview from './generatePostPreview'
+
 import resolvePromises from '../resolvePromises'
-import { fixAttachmentPictureSizes } from '../fixPictureSize'
 
 /**
  * Loads "resource" links (such as links to YouTube and Twitter)
@@ -27,12 +27,12 @@ export default function loadResourceLinks(post, {
 	messages,
 	onContentChange,
 	commentLengthLimit,
-	fixAttachmentPictureSizes: shouldFixAttachmentThumbnailSizes
+	loadPost
 }) {
 	// Clone the post so that the original `post` is only
 	// changed after the modified post has rendered.
 	const postWithLinksExpanded = clonePost(post)
-	const promises = [
+	let promises = [
 		loadTwitterLinks(postWithLinksExpanded.content, {
 			messages: messages && messages.contentType
 		}),
@@ -42,12 +42,8 @@ export default function loadResourceLinks(post, {
 			messages: messages && messages.post
 		})
 	]
-	// `lynxchan` doesn't provide `width` and `height`
-	// neither for the picture not for the thumbnail
-	// in `/catalog.json` API response (which is a bug).
-	// http://lynxhub.com/lynxchan/res/722.html#q984
-	if (shouldFixAttachmentThumbnailSizes && postWithLinksExpanded.attachments) {
-		promises.push(fixAttachmentPictureSizes(postWithLinksExpanded.attachments))
+	if (loadPost) {
+		promises = promises.concat(loadPost(postWithLinksExpanded))
 	}
 	function updatePostObject(newPost) {
 		post.content = newPost.content

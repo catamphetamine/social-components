@@ -72,13 +72,6 @@ export function parseTweetDateText(dateText) {
   }
 }
 
-export function getTweetId(url) {
-	const match = url.match(/\/status\/(\d+)/)
-	if (match) {
-		return match[1]
-	}
-}
-
 const MONTHS = [
 	'January',
 	'February',

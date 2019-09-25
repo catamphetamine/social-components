@@ -1,3 +1,5 @@
+import { getUrlQueryPart } from '../../utility/url'
+
 export default function getVideoUrl(id, options = {}) {
 	const parameters = {
 		v: id
