@@ -10,12 +10,6 @@ Some experiments with common social service concepts such as a "post", its data 
 npm install social-components --save
 ```
 
-## Use
-
-Currently this library is only used as a dependency of [`imageboard`](http://npmjs.com/package/imageboard) and [`webapp-frontend`](https://github.com/catamphetamine/webapp-frontend).
-
-The [`<Post/>` React component](https://github.com/catamphetamine/webapp-frontend/blob/master/src/components/Post.js) is currently being experimented on.
-
 This library uses `async`/`await` syntax so including `regenerator-runtime` is required when using it. That usually means either including `babel-polyfill` (Babel 6) or `@babel/polyfill` (Babel 7). Since Babel `7.4.0` `@babel/polyfill` [has been deprecated](https://babeljs.io/docs/en/babel-polyfill) and should be replaced with `core-js` and `regenerator-runtime`:
 
 ```
@@ -26,6 +20,12 @@ npm install core-js regenerator-runtime --save
 import "core-js/stable"
 import "regenerator-runtime/runtime"
 ```
+
+## Use
+
+Currently this library is only used as a dependency of [`imageboard`](http://npmjs.com/package/imageboard) and [`webapp-frontend`](https://github.com/catamphetamine/webapp-frontend).
+
+The [`<Post/>` React component](https://github.com/catamphetamine/webapp-frontend/blob/master/src/components/Post.js) is currently being experimented on.
 
 ## Model
 
