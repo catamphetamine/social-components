@@ -17,7 +17,7 @@ import { getDomainName } from '../url'
  * @param  {boolean} [options.usePlaceholderForCodeBlocks] — Skip code blocks.
  * @param  {boolean} [options.skipAttachments] — Skip attachments (embedded and non-embedded).
  * @param  {boolean} [options.stopOnNewLine]
- * @return {string}
+ * @return {string} [text]
  */
 export default function getPostText({ content, attachments }, options = {}) {
 	// Simple case optimization.
@@ -72,7 +72,6 @@ export default function getPostText({ content, attachments }, options = {}) {
 			}
 		}
 	}
-	return ''
 }
 
 export function getContentText(content, softLimit, options = {}) {
