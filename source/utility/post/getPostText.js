@@ -162,7 +162,7 @@ export function getContentText(content, softLimit, options = {}) {
 				return
 			}
 			if (Array.isArray(part.content)) {
-				return part.content.map(getContent).join('\n')
+				return part.content.map(getContent).join('')
 			}
 			return part.content
 		case 'link':
