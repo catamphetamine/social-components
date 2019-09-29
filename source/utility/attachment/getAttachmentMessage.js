@@ -16,5 +16,7 @@ export default function getAttachmentMessage(attachment, messages) {
 				}
 			}
 			return attachment.social.provider
+		default:
+			return messages.attachment
 	}
 }
