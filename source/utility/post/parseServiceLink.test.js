@@ -244,6 +244,14 @@ describe('parseServiceLink', () => {
 		)
 
 		expectToEqual(
+			parseServiceLink('https://2ch.hk/faq.html'),
+			{
+				service: '2ch',
+				text: '/faq.html'
+			}
+		)
+
+		expectToEqual(
 			parseServiceLink('https://2ch.hk/b/'),
 			{
 				service: '2ch',
@@ -256,6 +264,14 @@ describe('parseServiceLink', () => {
 			{
 				service: '2ch',
 				text: '/v/3541116'
+			}
+		)
+
+		expectToEqual(
+			parseServiceLink('https://4chan.org/faq'),
+			{
+				service: '4chan',
+				text: 'faq'
 			}
 		)
 

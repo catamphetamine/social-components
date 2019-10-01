@@ -253,7 +253,7 @@ const SERVICES = {
 	'2ch.hk': {
 		name: '2ch',
 		getText(url) {
-			const matchBoard = url.pathname.match(/^\/([^\/]+)$/)
+			const matchBoard = !HTML_PAGE_REGEXP.test(url.pathname) && url.pathname.match(/^\/([^\/]+)$/)
 			if (matchBoard) {
 				return `/${matchBoard[1]}/`
 			}
@@ -265,6 +265,9 @@ const SERVICES = {
 		}
 	},
 	'4chan.org': {
+		name: '4chan'
+	},
+	'boards.4chan.org': {
 		name: '4chan',
 		getText(url) {
 			const matchBoard = url.pathname.match(/^\/([^\/]+)$/)
@@ -289,8 +292,7 @@ SERVICES['2ch.pm'] = SERVICES['2ch.hk']
 SERVICES['2ch.yt'] = SERVICES['2ch.hk']
 SERVICES['2ch.wf'] = SERVICES['2ch.hk']
 SERVICES['2ch.re'] = SERVICES['2ch.hk']
-SERVICES['boards.4channel.org'] = SERVICES['4chan.org']
-SERVICES['boards.4chan.org'] = SERVICES['4chan.org']
+SERVICES['boards.4channel.org'] = SERVICES['boards.4chan.org']
 SERVICES['m.youtube.com'] = SERVICES['youtube.com']
 SERVICES['arhivach.cf'] = SERVICES['archivach.org']
 SERVICES['arhivach.ng'] = SERVICES['archivach.org']
@@ -308,3 +310,5 @@ function getProtocol() {
 	}
 	return 'https'
 }
+
+const HTML_PAGE_REGEXP = /\.html$/
