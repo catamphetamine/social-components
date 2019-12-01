@@ -43,7 +43,9 @@ class PreviewGenerator {
 	}
 
 	generate() {
+		let i = -1
 		for (const block of this.content) {
+			i++
 			let trimmedBlock
 			if (typeof block === 'string') {
 				if (block === '\n') {
@@ -158,7 +160,9 @@ class PreviewGenerator {
 			if (trimmedBlock !== block) {
 				// See if the rest content exceeds the threshold.
 				let points = this.blockLevelTrimCharacterPoints
-				let i = this.content.indexOf(block)
+				// `block` could be a `string` which means that
+				// `.indexOf(block)` could confuse two identical string blocks.
+				// let i = this.content.indexOf(block)
 				let restContentExceedsThreshold = false
 				const countIfFits = (count) => {
 					if (typeof count !== 'number') {
