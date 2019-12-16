@@ -10,6 +10,13 @@ function getPostTextTest(post, options, text) {
 	expectToEqual(getPostText(post, options), text)
 }
 
+const messages = {
+	contentType: {
+		picture: 'Picture',
+		video: 'Video'
+	}
+}
+
 describe('getPostText', () => {
 	it('should get post text', () => {
 		getPostTextTest(
@@ -303,10 +310,7 @@ describe('getPostText', () => {
 				}]
 			},
 			{
-				messages: {
-					picture: 'Picture',
-					video: 'Video'
-				}
+				messages
 			},
 			'Abc\n\nVideo\n\nDef\n\nPicture\n\nGhi'
 		)
@@ -350,10 +354,7 @@ describe('getPostText', () => {
 				}]
 			},
 			{
-				messages: {
-					picture: 'Picture',
-					video: 'Video'
-				}
+				messages
 			},
 			'Abc\n\n«Video Title»\n\nDef\n\n«Picture Title»\n\nGhi'
 		)
@@ -392,10 +393,7 @@ describe('getPostText', () => {
 				}]
 			},
 			{
-				messages: {
-					picture: 'Picture',
-					video: 'Video'
-				}
+				messages
 			},
 			'Abc\n\nDef\n\nGhi'
 		)
@@ -438,10 +436,7 @@ describe('getPostText', () => {
 				}]
 			},
 			{
-				messages: {
-					picture: 'Picture',
-					video: 'Video'
-				},
+				messages,
 				skipAttachments: true
 			},
 			'Abc\n\nDef\n\nGhi'
@@ -483,10 +478,7 @@ describe('getPostText', () => {
 				}]
 			},
 			{
-				messages: {
-					picture: 'Picture',
-					video: 'Video'
-				},
+				messages,
 				skipUntitledAttachments: true
 			},
 			'Abc\n\nDef\n\n«Picture Title»\n\nGhi'
@@ -521,10 +513,7 @@ describe('getPostText', () => {
 				}]
 			},
 			{
-				messages: {
-					picture: 'Picture',
-					video: 'Video'
-				},
+				messages,
 				skipAttachments: true
 			},
 			'«Video Title»'
@@ -555,10 +544,7 @@ describe('getPostText', () => {
 				}]
 			},
 			{
-				messages: {
-					picture: 'Picture',
-					video: 'Video'
-				},
+				messages,
 				skipAttachments: true
 			},
 			'Video'
@@ -589,10 +575,7 @@ describe('getPostText', () => {
 	// 			}]
 	// 		},
 	// 		{
-	// 			messages: {
-	// 				picture: 'Picture',
-	// 				video: 'Video'
-	// 			},
+	// 			messages,
 	// 			ignoreAttachments: true
 	// 		},
 	// 		''
@@ -637,10 +620,7 @@ describe('getPostText', () => {
 				}]
 			},
 			{
-				messages: {
-					picture: 'Picture',
-					video: 'Video'
-				}
+				messages
 			},
 			'Abc\n\nZooey Deschanel (@zooeydeschanel): «My favorite cat from tonight\'s episode- a true winner. #newgirl»'
 		)

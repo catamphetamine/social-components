@@ -2,6 +2,11 @@ import getSocialText from './getSocialText'
 
 import expectToEqual from '../expectToEqual'
 
+const messages = {
+	picture: 'Picture',
+	video: 'Video'
+}
+
 describe('getSocialText', () => {
 	it('should get social text', () => {
 		expectToEqual(
@@ -69,9 +74,7 @@ describe('getSocialText', () => {
 						}
 					}]
 				},
-				{
-					picture: 'Picture'
-				}
+				messages
 			),
 			'@zooeydeschanel: Picture'
 		)

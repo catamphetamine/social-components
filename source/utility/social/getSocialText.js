@@ -10,7 +10,7 @@ const RIGHT_QUOTE = '»'
 /**
  * Generates a text-only representation of a `social`.
  * @param  {object} social
- * @param  {object} [messages]
+ * @param  {object} [messages] — An object of shape `{ picture, video, ... }`.
  * @return {string}
  */
 export default function getSocialText(social, messages) {
@@ -19,6 +19,7 @@ export default function getSocialText(social, messages) {
 	if (content) {
 		return `${author}: ${content}`
 	}
+	// `author` is supposed to always be present.
 	return author
 }
 
@@ -40,12 +41,12 @@ function getSocialContentText(social, messages) {
 	}
 	if (social.attachments) {
 		for (const attachment of social.attachments) {
-			const text = getAttachmentTextWithoutSocial(attachment, messages)
+			const text = getAttachmentTextWithoutSocial(attachment)
 			if (text) {
 				return text
 			}
 		}
-		if (messages && messages) {
+		if (messages) {
 			for (const attachment of social.attachments) {
 				if (getAttachmentMessage(attachment, messages)) {
 					return getAttachmentMessage(attachment, messages)

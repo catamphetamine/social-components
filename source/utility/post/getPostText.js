@@ -59,15 +59,18 @@ export default function getPostText({ content, attachments }, options = {}) {
 	}
 	// If there're any attachments then fall back to attachment text.
 	if (attachments) {
+		const { messages } = options
 		for (const attachment of attachments) {
-			if (getAttachmentText(attachment, options.messages)) {
-				return getAttachmentText(attachment, options.messages)
+			const text = getAttachmentText(attachment, messages && messages.contentType)
+			if (text) {
+				return text
 			}
 		}
-		if (options.messages) {
+		if (messages && messages.contentType) {
 			for (const attachment of attachments) {
-				if (getAttachmentMessage(attachment, options.messages)) {
-					return getAttachmentMessage(attachment, options.messages)
+				const text = getAttachmentMessage(attachment, messages.contentType)
+				if (text) {
+					return text
 				}
 			}
 		}
@@ -193,15 +196,16 @@ export function getContentText(content, softLimit, options = {}) {
 			if (!attachment) {
 				return
 			}
-			const text = getAttachmentText(attachment, options.messages)
+			const { messages } = options
+			const text = getAttachmentText(attachment, messages && messages.contentType)
 			if (text) {
 				return text
 			}
 			if (options.skipUntitledAttachments) {
 				return
 			}
-			if (options.messages) {
-				return getAttachmentMessage(attachment, options.messages)
+			if (messages && messages.contentType) {
+				return getAttachmentMessage(attachment, messages.contentType)
 			}
 			return
 		default:
