@@ -709,7 +709,9 @@ describe('getPostText', () => {
 			},
 			{
 				messages: {
-					linkTo: 'link to {0}'
+					contentType: {
+						linkTo: 'link to {0}'
+					}
 				}
 			},
 			'(link to google.com)'

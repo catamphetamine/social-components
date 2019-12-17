@@ -170,8 +170,9 @@ export function getContentText(content, softLimit, options = {}) {
 			return part.content
 		case 'link':
 			if (part.contentGenerated) {
-				if (options.messages && options.messages.linkTo) {
-					return `(${options.messages.linkTo.replace('{0}', getDomainName(part.url)).toLowerCase()})`
+				const { messages } = options
+				if (messages && messages.contentType && messages.contentType.linkTo) {
+					return `(${messages.contentType.linkTo.replace('{0}', getDomainName(part.url)).toLowerCase()})`
 				}
 				return getHumanReadableLinkAddress(part.url)
 			}
