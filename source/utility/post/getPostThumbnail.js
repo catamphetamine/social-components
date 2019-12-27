@@ -3,7 +3,7 @@ import isEmbeddedAttachment from './isEmbeddedAttachment'
 import getSortedAttachments from './getSortedAttachments'
 // import countPostBlockCharacters from './countPostBlockCharacters'
 
-export default function getPostThumbnail(post, { showPostThumbnailWhenThereAreMultipleAttachments }) {
+export default function getPostThumbnailAttachment(post, { showPostThumbnailWhenThereAreMultipleAttachments }) {
 	if (shouldCreateThumbnail(post, { showPostThumbnailWhenThereAreMultipleAttachments })) {
 		return getAttachments(post).find((attachment) => {
 			switch (attachment.type) {
