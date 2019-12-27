@@ -13,11 +13,19 @@ import getContentBlocks from './getContentBlocks'
 const NEW_PARAGRAPH_COST = 60
 
 // If the total content length doesn't exceed
-// `(1 + FIT_FACTOR) * limit` then preview is not neccessary.
+// `(1 + fitFactor) * limit` then preview is not neccessary.
 const FIT_FACTOR = 0.2
 
 const ENOUGH_CONTENT_FACTOR = 0.75
 
+/**
+ * Generates a shortened "preview" of `content`.
+ * @param  {any} content
+ * @param  {object[]} [attachments] — If the `content` has any embedded attachments, `attachments` list must be passed.
+ * @param  {number} options.limit — Preview content (soft) limit (in "points").
+ * @param  {number} [options.fitFactor] — `limit` "softness" (`limit = (1 + fitFactor) * limit`) .
+ * @return {any}
+ */
 export default function generatePostPreview(content, attachments, options) {
 	if (!content) {
 		return
@@ -141,11 +149,16 @@ class PreviewGenerator {
 					}
 				}
 			} else {
-				const result = countIfNonTextPostBlockFits(block, this, this.countIfFits)
+				// Returns `true` if the `block` fits entirely.
+				// Returns a shortened `block` if the `block` fits partially (for example, a `list`).
+				// Returns nothing if the `block` doesn't fit.
+				const result = countIfNonTextPostBlockFits(block, this.attachments, this.countIfFits)
 				if (result) {
 					if (result === true) {
+						// The `block` fits entirely.
 						trimmedBlock = block
 					} else {
+						// `result` is a shortened `block` (for example, a shortened `list`).
 						trimmedBlock = result
 					}
 				}
@@ -182,10 +195,14 @@ class PreviewGenerator {
 						}
 					} else {
 						restContentExceedsThreshold = true
-						const result = countIfNonTextPostBlockFits(block, this, this.countIfFits)
+						// Returns `true` if the `block` fits entirely.
+						// Returns a shortened `block` if the `block` fits partially (for example, a `list`).
+						// Returns nothing if the `block` doesn't fit.
+						const result = countIfNonTextPostBlockFits(block, this.attachments, this.countIfFits)
 						if (result === true) {
 							restContentExceedsThreshold = false
 						}
+						// Partial fit case is ignored here.
 					}
 					if (restContentExceedsThreshold) {
 						break

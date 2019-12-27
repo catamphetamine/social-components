@@ -1,3 +1,10 @@
+/**
+ * Calls `visit(part)` on each part of `content` being of `type` type.
+ * @param  {string} type
+ * @param  {function} visit
+ * @param  {any} content
+ * @return {any[]} Results returned by each `visit()`.
+ */
 export default function visitPostParts(type, visit, part, $ = []) {
 	if (Array.isArray(part)) {
 		for (const subpart of part) {

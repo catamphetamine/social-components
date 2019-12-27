@@ -1,6 +1,14 @@
 import getAttachmentCharacterPoints from './getAttachmentCharacterPoints'
 
-export default function countIfNonTextPostBlockFits(block, post, countIfFits) {
+/**
+ * Counts the "points" of a non-text block (picture, video)
+ * and determines if it "fits" (using the supplied `countIfFits` function).
+ * @param  {object} block
+ * @param  {object[]} [attachments]
+ * @param  {function} countIfFits
+ * @return {(boolean|object)} [result] Returns `true` if the `block` fits entirely. Returns a shortened `block` if the `block` fits partially (for example, a `list`). Returns nothing if the `block` doesn't fit.
+ */
+export default function countIfNonTextPostBlockFits(block, attachments, countIfFits) {
 	const blockType = CONTENT_BLOCKS[block.type]
 	if (!blockType) {
 		console.error(`Unsupported post block type: ${block.type}`)
@@ -8,7 +16,7 @@ export default function countIfNonTextPostBlockFits(block, post, countIfFits) {
 	}
 	let _block = block
 	if (block.type === 'attachment') {
-		_block = post.attachments.find(_ => _.id === block.attachmentId)
+		_block = attachments.find(_ => _.id === block.attachmentId)
 		if (!_block) {
 			console.error(`Attachment ${block.attachmentId} not found`)
 			return
