@@ -1,6 +1,6 @@
 {
   "name": "social-components",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "Social services components",
   "main": "index.commonjs.js",
   "module": "index.js",
