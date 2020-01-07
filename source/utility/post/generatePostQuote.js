@@ -2,9 +2,9 @@ import getPostText from './getPostText'
 import trimText from './trimText'
 
 /**
- * Returns post text: first tries without post quotes, then tries with post quotes (unless `skipPostQuotes: true` option is passed).
+ * Returns post text: first tries without post quotes, then tries with post quotes (unless `skipPostQuoteBlocks: true` option is passed).
  * @param  {object} post
- * @param  {bool} options.skipPostQuotes — Set to `true` to skip post quotes. Post quotes are skipped on first run, but not on second run (if the first run returned no text).
+ * @param  {bool} options.skipPostQuoteBlocks — Set to `true` to skip post quotes. Post quotes are skipped on first run, but not on second run (if the first run returned no text).
  * @return {string} [text]
  */
 export default function generatePostQuote({ content, attachments }, {
@@ -12,7 +12,7 @@ export default function generatePostQuote({ content, attachments }, {
 	maxLength,
 	stopOnNewLine,
 	countNewLines,
-	skipPostQuotes,
+	skipPostQuoteBlocks,
 	fitFactor
 }) {
 	const options = {
@@ -23,11 +23,11 @@ export default function generatePostQuote({ content, attachments }, {
 	}
 	let text = getPostText({ content, attachments }, {
 		...options,
-		skipPostQuotes: true
+		skipPostQuoteBlocks: true
 	})
 	// If the generated post preview is empty
 	// then loosen the filters and include post quotes.
-	if (!text && !skipPostQuotes) {
+	if (!text && !skipPostQuoteBlocks) {
 		text = getPostText({ content, attachments }, options)
 	}
 	if (text) {
@@ -49,6 +49,6 @@ export function canGeneratePostQuoteIgnoringNestedPostQuotes(post, options) {
 		maxLength: 1,
 		fitFactor: 0,
 		messages: options && options.messages,
-		skipPostQuotes: true
+		skipPostQuoteBlocks: true
 	}) ? true : false
 }
