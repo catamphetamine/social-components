@@ -17,6 +17,8 @@ import { getDomainName } from '../url'
  * @param  {boolean} [options.usePlaceholderForCodeBlocks] — Skip code blocks.
  * @param  {boolean} [options.skipAttachments] — Skip attachments (embedded and non-embedded).
  * @param  {boolean} [options.stopOnNewLine]
+ * @param  {string} [options.openingQuote] — Opening quote character used to generate inline `post-link` quoted text content. Is `«` by default.
+ * @param  {string} [options.closingQuote] — Closing quote character used to generate inline `post-link` quoted text content. Is `»` by default.
  * @return {string} [text]
  */
 export default function getPostText({ content, attachments }, options = {}) {
@@ -140,10 +142,12 @@ export function getContentText(content, softLimit, options = {}) {
 	}
 	switch (part.type) {
 		case 'quote':
+			const openingQuote = options.openingQuote || '«'
+			const closingQuote = options.closingQuote || '»'
 			if (part.source) {
-				return `«${getContent()}» — ${part.source}`
+				return `${openingQuote}${getContent()}» — ${part.source}${closingQuote}`
 			}
-			return `«${getContent()}»`
+			return `${openingQuote}${getContent()}${closingQuote}`
 		case 'spoiler':
 			// https://www.w3schools.com/charsets/ref_utf_block.asp
 			// ░ LIGHT SHADE
