@@ -336,6 +336,14 @@ describe('parseServiceLink', () => {
 				text: 'document/1-XMrCVI3GfwHu8wObTixAlpA3ftjs87lkX017SaVl6I'
 			}
 		)
+
+		expectToEqual(
+			parseServiceLink('https://docs.google.com/document/d/e/2PACX-1vSYXth0wz_7cX59bDkDEDwoD48jJWD3bYkLG6hDPB4zJK-HaD4v6TyOiro5dvZM8O9XBdjWN7GLhQ0I/pub'),
+			{
+				service: 'google',
+				text: 'document/e/2PACX-1vSYXth0wz_7cX59bDkDEDwoD48jJWD3bYkLG6hDPB4zJK-HaD4v6TyOiro5dvZM8O9XBdjWN7GLhQ0I'
+			}
+		)
 	})
 
 	it('should parse google maps links', () => {
@@ -364,6 +372,16 @@ describe('parseServiceLink', () => {
 			{
 				service: 'yandex',
 				text: 'maps/37.672836,55.727706'
+			}
+		)
+	})
+
+	it('should parse yandex market links', () => {
+		expectToEqual(
+			parseServiceLink('https://market.yandex.ru/product--sistema-okhlazhdeniia-dlia-korpusa-noctua-nf-a14-flx/8519259/offers?track=tabs&local-offers-first=0&deliveryincluded=0'),
+			{
+				service: 'yandex',
+				text: 'market/sistema-okhlazhdeniia-dlia-korpusa-noctua-nf-a14-flx'
 			}
 		)
 	})

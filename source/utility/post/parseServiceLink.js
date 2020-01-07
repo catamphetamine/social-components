@@ -114,9 +114,14 @@ const SERVICES = {
 	'docs.google.com': {
 		name: 'google',
 		getText(url) {
-			const documentMatch = url.pathname.match(/^\/(spreadsheets|document)\/d\/([^\/]+)/)
+			const documentMatch = url.pathname.match(/^\/(spreadsheets|document)\/d\/(.+)$/)
 			if (documentMatch) {
-				return `${documentMatch[1]}/${documentMatch[2]}`
+				let [_, documentType, documentPath] = documentMatch
+				const postfixMatch = documentPath.match(/\/(edit|pub)$/)
+				if (postfixMatch) {
+					documentPath = documentPath.slice(0, -1 * postfixMatch[0].length)
+				}
+				return `${documentType}/${documentPath}`
 			}
 		}
 	},
@@ -152,6 +157,15 @@ const SERVICES = {
 			const coordinatesMatch = url.pathname.match(/^\/maps\/([^\/]+)/)
 			if (coordinatesMatch) {
 				return `maps/${url.searchParams.get('ll')}`
+			}
+		}
+	},
+	'market.yandex.ru': {
+		name: 'yandex',
+		getText(url) {
+			const productMatch = url.pathname.match(/^\/product--([^\/]+)/)
+			if (productMatch) {
+				return `market/${productMatch[1]}`
 			}
 		}
 	},
