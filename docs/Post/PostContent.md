@@ -58,11 +58,13 @@ Styles:
 {
 	type: "quote",
 	kind: string?,
+	block: boolean?,
 	content: InlineContent
 }
 ```
 
 * `kind` is for "imageboards" which have regular quotes (`> Text`) and "inverse" quotes (`< Text`).
+* `block` — `true` means "emulate block quote appearance while staying inline".
 
 ### Inline spoiler
 
