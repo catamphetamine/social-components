@@ -7,27 +7,45 @@ import trimText from './trimText'
  * @param  {bool} options.skipPostQuoteBlocks — Set to `true` to skip post quotes. Post quotes are skipped on first run, but not on second run (if the first run returned no text).
  * @return {string} [text]
  */
-export default function generatePostQuote({ content, attachments }, _options) {
+export default function generatePostQuote(post, _options) {
+	const { content, attachments } = post
 	const {
 		maxLength,
 		fitFactor,
 		countNewLines,
 		skipPostQuoteBlocks,
+		// cache,
 		...rest
 	} = _options
 	const getPostTextOptions = {
 		...rest,
 		softLimit: maxLength
 	}
-	let text = getPostText({ content, attachments }, {
-		...getPostTextOptions,
-		skipPostQuoteBlocks: true
-	})
-	// If the generated post preview is empty
-	// then loosen the filters and include post quotes.
-	if (!text && !skipPostQuoteBlocks) {
-		text = getPostText({ content, attachments }, getPostTextOptions)
-	}
+	let text
+	// If `cache` was to be implemented, then
+	// `post._text` and `post._textMaxLength`
+	// would have to be reset after `loadResourceLinks()`,
+	// and also after an attachment spoiler has been revealed.
+	// Also, `onPostLink()` wouldn't get triggered in such case,
+	// which would result in incorrect behavior of
+	// `canGeneratePostQuoteIgnoringNestedPostQuotes()`.
+	// if (cache && post._textMaxLength !== undefined && maxLength <= post._textMaxLength) {
+	// 	text = post._text
+	// } else {
+		text = getPostText({ content, attachments }, {
+			...getPostTextOptions,
+			skipPostQuoteBlocks: true
+		})
+		// If the generated post preview is empty
+		// then loosen the filters and include post quotes.
+		if (!text && !skipPostQuoteBlocks) {
+			text = getPostText({ content, attachments }, getPostTextOptions)
+		}
+	// 	if (cache) {
+	// 		post._text = text
+	// 		post._textMaxLength = maxLength
+	// 	}
+	// }
 	if (text) {
 		// Return the quoted post text abstract.
 		// Compacts multiple paragraphs into multiple lines.
