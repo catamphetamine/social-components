@@ -91,16 +91,11 @@ export function getContentText(content, softLimit, options = {}) {
 			if (part === '\n' && options.stopOnNewLine && text) {
 				break
 			}
-			const isStandalonePostLink = content[i].type === 'post-link' &&
-				(i === 0 || content[i - 1] === '\n') &&
-				(i === content.length - 1 || content[i + 1] === '\n')
-			let partText
-			if (isStandalonePostLink && !(Array.isArray(part.content) && part.content[0].type === 'quote')) {
-				// Ignore standalone post links without quote content.
-				// (for example, "Hidden post" links or "Deleted post" links)
-			} else {
-				partText = getContentText(part, softLimit, options)
-			}
+			const partText = getContentText(part, softLimit, {
+				...options,
+				isStandalone: (i === 0 || content[i - 1] === '\n') &&
+					(i === content.length - 1 || content[i + 1] === '\n')
+			})
 			if (partText) {
 				text += partText
 				if (softLimit !== undefined) {
@@ -132,11 +127,13 @@ export function getContentText(content, softLimit, options = {}) {
 	const part = content
 	const getContent = (content) => {
 		if (content === undefined) {
-			if (!part.content) {
+			if (part.content) {
+				content = part.content
+			} else {
 				console.error(`No "content" is present for an inline-level paragraph part`)
 				console.error(part)
+				return ''
 			}
-			content = part.content
 		}
 		return getContentText(content, softLimit, options)
 	}
@@ -160,13 +157,31 @@ export function getContentText(content, softLimit, options = {}) {
 		case 'emoji':
 			return `:${part.name}:`
 		case 'post-link':
-			const hasQuoteBlocks = Array.isArray(part.content) && part.content[0].type === 'quote'
+			const hasQuotes = Array.isArray(part.content) && part.content[0].type === 'quote'
+			const hasQuoteBlocks = hasQuotes && part.content[0].block
+			const hasInlineQuotes = hasQuotes && !hasQuoteBlocks
+			if (options.onPostLink) {
+				options.onPostLink(part)
+			}
+			// Ignore standalone post links without quote content.
+			// (for example, "Hidden post" links or "Deleted post" links)
+			if (!hasQuotes && options.isStandalone) {
+				return
+			}
 			if (options.skipPostQuoteBlocks && hasQuoteBlocks ||
 				options.skipGeneratedPostQuoteBlocks && hasQuoteBlocks && part.content[0].generated) {
 				return
 			}
 			if (Array.isArray(part.content)) {
-				return part.content.map(getContent).join('')
+				let content = ''
+				for (const part of part.content) {
+					const text = getContent(part)
+					content += text
+					if (softLimit !== undefined) {
+						softLimit -= text.length
+					}
+				}
+				return content
 			}
 			return part.content
 		case 'link':
