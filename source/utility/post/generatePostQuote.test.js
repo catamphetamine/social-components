@@ -1,4 +1,69 @@
-import { canGeneratePostQuoteIgnoringNestedPostQuotes } from './generatePostQuote'
+import generatePostQuote, { canGeneratePostQuoteIgnoringNestedPostQuotes } from './generatePostQuote'
+
+const messages = {
+	contentType: {
+		picture: 'Picture'
+	}
+}
+
+describe('generatePostQuote', () => {
+	it('should generate post quote prepending title', () => {
+		generatePostQuote({
+			title: 'Title',
+			content: 'Content'
+		}, { maxLength: 100 }).should.equal('Title\nContent')
+	})
+
+	it('should generate post quote using just title when there\'s no text', () => {
+		generatePostQuote({
+			title: 'Title'
+		}, { maxLength: 100 }).should.equal('Title')
+	})
+
+	it('should generate post quote with just the text when there\'s no title', () => {
+		generatePostQuote({
+			content: 'Content'
+		}, { maxLength: 100 }).should.equal('Content')
+	})
+
+	it('should generate post quote with untitled image embedded (embedded attachment)', () => {
+		let attachment
+		generatePostQuote({
+			content: [{
+				type: 'attachment',
+				attachmentId: 1
+			}],
+			attachments: [{
+				id: 1,
+				type: 'picture',
+				picture: {}
+			}]
+		}, {
+			maxLength: 100,
+			messages,
+			embedUntitledAttachments: true,
+			onAttachment: _ => attachment = _
+		}).should.equal('Picture')
+		attachment.id.should.equal(1)
+	})
+
+	it('should generate post quote with untitled image embedded (non-embedded attachment)', () => {
+		let attachment
+		generatePostQuote({
+			attachments: [{
+				id: 1,
+				type: 'picture',
+				picture: {}
+			}]
+		}, {
+			maxLength: 100,
+			messages,
+			embedUntitledAttachments: true,
+			onAttachment: _ => attachment = _
+		}).should.equal('Picture')
+		attachment.id.should.equal(1)
+	})
+})
 
 describe('canGeneratePostQuoteIgnoringNestedPostQuotes', () => {
 	it('should tell that can generate post quote ignoring nested post quotes when there\'re inline post links but the limit doesn\'t reach it', () => {

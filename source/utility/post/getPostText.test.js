@@ -337,7 +337,9 @@ describe('getPostText', () => {
 				}]
 			},
 			{
-				messages
+				messages,
+				skipAttachments: false,
+				skipUntitledAttachments: false
 			},
 			'Abc\n\nVideo\n\nDef\n\nPicture\n\nGhi'
 		)
@@ -381,7 +383,8 @@ describe('getPostText', () => {
 				}]
 			},
 			{
-				messages
+				messages,
+				skipAttachments: false
 			},
 			'Abc\n\n«Video Title»\n\nDef\n\n«Picture Title»\n\nGhi'
 		)
@@ -420,7 +423,8 @@ describe('getPostText', () => {
 				}]
 			},
 			{
-				messages
+				messages,
+				skipAttachments: false
 			},
 			'Abc\n\nDef\n\nGhi'
 		)
@@ -463,8 +467,7 @@ describe('getPostText', () => {
 				}]
 			},
 			{
-				messages,
-				skipAttachments: true
+				messages
 			},
 			'Abc\n\nDef\n\nGhi'
 		)
@@ -506,13 +509,37 @@ describe('getPostText', () => {
 			},
 			{
 				messages,
-				skipUntitledAttachments: true
+				skipAttachments: false
 			},
 			'Abc\n\nDef\n\n«Picture Title»\n\nGhi'
 		)
 	})
 
-	it('should return attachment title when there\'s no post text and "skipAttachments" is "true"', () => {
+	it('should skip non-embedded attachments by default when "skipAttachments" is "false"', () => {
+		expect(getPostText(
+			{
+				attachments: [{
+					id: 1,
+					type: 'video',
+					video: {
+						title: 'Video Title'
+					}
+				}, {
+					id: 2,
+					type: 'picture',
+					picture: {
+						title: 'Picture Title'
+					}
+				}]
+			},
+			{
+				messages,
+				skipAttachments: false
+			}
+		)).to.be.undefined
+	})
+
+	it('should return attachment title when there\'s no post text and "skipAttachments" is "false"', () => {
 		getPostTextTest(
 			{
 				content: [
@@ -541,13 +568,13 @@ describe('getPostText', () => {
 			},
 			{
 				messages,
-				skipAttachments: true
+				skipAttachments: false
 			},
-			'«Video Title»'
+			'«Video Title»\n\n«Picture Title»'
 		)
 	})
 
-	it('should return attachment placeholder when there\'s no post text and the attachment is untitled and "skipAttachments" is "true"', () => {
+	it('should return attachment placeholder when there\'s no post text and the attachment is untitled and "skipAttachments" is "false"', () => {
 		getPostTextTest(
 			{
 				content: [
@@ -572,9 +599,10 @@ describe('getPostText', () => {
 			},
 			{
 				messages,
-				skipAttachments: true
+				skipAttachments: false,
+				skipUntitledAttachments: false
 			},
-			'Video'
+			'Video\n\nPicture'
 		)
 	})
 
@@ -647,7 +675,8 @@ describe('getPostText', () => {
 				}]
 			},
 			{
-				messages
+				messages,
+				skipAttachments: false
 			},
 			'Abc\n\nZooey Deschanel (@zooeydeschanel): «My favorite cat from tonight\'s episode- a true winner. #newgirl»'
 		)
