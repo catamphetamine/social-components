@@ -28,9 +28,9 @@ export default function getTweetText(html, { messages }) {
       // Replace attachment links with `(attachment)` messages.
       // Could be a picture or a video.
       if (messages.attachment && text.indexOf('pic.twitter.com') === 0) {
-        return `(${messages.attachment.toLowerCase()})`
+        return `(${messages.attachment})`
       }
-      return `(${messages.link.toLowerCase()})`
+      return `(${messages.link})`
     })
   }
   // Replace new lines.

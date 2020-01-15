@@ -1,3 +1,9 @@
+1.0.18 / 15.01.2020
+===================
+
+* `generatePostPreview()` arguments changed: `(content, attachments, options)` -> `(post, options)`. `option.limit` -> `option.maxLength`.
+* `loadResourceLinks()` argument renamed: `commentLengthLimit` -> `contentMaxLength`.
+
 1.0.5 / 29.09.2019
 ===================
 

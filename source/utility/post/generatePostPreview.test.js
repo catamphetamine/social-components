@@ -1,6 +1,14 @@
-import generatePostPreview from './generatePostPreview'
+import generatePostPreview_ from './generatePostPreview'
 
 import expectToEqual from '../expectToEqual'
+
+function generatePostPreview(content, attachments, options) {
+	return generatePostPreview_({ content, attachments }, {
+		...options,
+		maxLength: options.limit,
+		limit: undefined
+	})
+}
 
 function getPostPreviewTest(post, options, expected) {
 	if (Array.isArray(post)) {

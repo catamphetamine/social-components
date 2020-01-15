@@ -13,20 +13,19 @@ import getContentBlocks from './getContentBlocks'
 const NEW_PARAGRAPH_COST = 60
 
 // If the total content length doesn't exceed
-// `(1 + fitFactor) * limit` then preview is not neccessary.
+// `(1 + fitFactor) * maxLength` then preview is not neccessary.
 const FIT_FACTOR = 0.2
 
 const ENOUGH_CONTENT_FACTOR = 0.75
 
 /**
- * Generates a shortened "preview" of `content`.
- * @param  {any} content
- * @param  {object[]} [attachments] — If the `content` has any embedded attachments, `attachments` list must be passed.
- * @param  {number} options.limit — Preview content (soft) limit (in "points").
- * @param  {number} [options.fitFactor] — `limit` "softness" (`limit = (1 + fitFactor) * limit`) .
- * @return {any}
+ * Generates a shortened "preview" of a post's `content`.
+ * @param  {Post} post.
+ * @param  {number} options.maxLength — Preview content (soft) limit (in "points": for text, one "point" is equal to one character, while any other non-text content has its own "points", including attachments and new line character).
+ * @param  {number} [options.fitFactor] — `maxLength` limit "softness" (`limit = (1 + fitFactor) * maxLength`) .
+ * @return {Content} [previewContent] Preview content. If `content` was `undefined` then `previewContent` is too. Otherwise, `previewContent` isn't `undefined`. If the `content` fits entirely then the preview content will be (deeply) equal to it. Otherwise, preview content will be a shortened version of `content` with a `{ type: 'read-more' }` marker somewhere in the end.
  */
-export default function generatePostPreview(content, attachments, options) {
+export default function generatePostPreview({ content, attachments }, options) {
 	if (!content) {
 		return
 	}
@@ -44,6 +43,12 @@ class PreviewGenerator {
 	blockLevelTrimCharacterCount = 0
 	blockLevelTrimCharacterPoints = 0
 
+	/**
+	 * @param {Content} content — Post `content`. Can't be `undefined`.
+	 * @param {object[]} [attachments] — If the `content` has any embedded attachments, `attachments` list must be passed.
+	 * @param {number} options.maxLength — Preview content (soft) limit (in "points": for text, one "point" is equal to one character, while any other non-text content has its own "points", including attachments and new line character).
+	 * @param {number} [options.fitFactor] — `maxLength` limit "softness" (`limit = (1 + fitFactor) * maxLength`) .
+	 */
 	constructor(content, attachments, options) {
 		this.content = content
 		this.attachments = attachments
@@ -166,7 +171,7 @@ class PreviewGenerator {
 			if (trimmedBlock) {
 				this.preview.push(trimmedBlock)
 			}
-			if (trimmedBlock === block && this.characterPoints > this.options.limit) {
+			if (trimmedBlock === block && this.characterPoints > this.options.maxLength) {
 				trimmedBlock = undefined
 			}
 			// If trim point reached.
@@ -265,7 +270,7 @@ class PreviewGenerator {
 	}
 
 	getCharacterPointsLeft(fitFactor) {
-		return this.withFitFactor(this.options.limit, fitFactor) - this.characterPoints
+		return this.withFitFactor(this.options.maxLength, fitFactor) - this.characterPoints
 	}
 
 	countIn(content, arg2) {
@@ -279,7 +284,7 @@ class PreviewGenerator {
 	}
 
 	willOverflow(points, fitFactor) {
-		return this.characterPoints + points > this.withFitFactor(this.options.limit, fitFactor)
+		return this.characterPoints + points > this.withFitFactor(this.options.maxLength, fitFactor)
 	}
 
 	withFitFactor(points, fitFactor = 0) {

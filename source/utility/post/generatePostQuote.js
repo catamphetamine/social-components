@@ -4,7 +4,8 @@ import trimText from './trimText'
 /**
  * Returns post text: first tries without post quotes, then tries with post quotes (unless `skipPostQuoteBlocks: true` option is passed).
  * @param  {object} post
- * @param  {bool} options.skipPostQuoteBlocks — Set to `true` to skip post quotes. Post quotes are skipped on first run, but not on second run (if the first run returned no text).
+ * @param  {bool} [options.skipPostQuoteBlocks] — Set to `true` to skip post quotes. Post quotes are skipped by default, unless no quote has been generated, in which case the function is re-run with post quotes included (unless instructed otherwise).
+ * @param  {function} [options.onUntitledAttachment] — If set, this function will be called with an untitled attachment as an argument in cases when the resulting post quote has to quote such untitled attachment, resulting in something generic like "Picture" or "Video": in such cases, the `attachment` could be displayed instead of such generic label.
  * @return {string} [text]
  */
 export default function generatePostQuote(post, _options) {
@@ -16,10 +17,8 @@ export default function generatePostQuote(post, _options) {
 	const {
 		maxLength,
 		fitFactor,
-		countNewLines,
 		skipPostQuoteBlocks,
-		embedUntitledAttachments,
-		onAttachment,
+		onUntitledAttachment,
 		// cache,
 		...rest
 	} = _options
@@ -75,7 +74,7 @@ export default function generatePostQuote(post, _options) {
 				skipAttachments: false,
 				skipUntitledAttachments: false,
 				skipNonEmbeddedAttachments: false,
-				onAttachment: embedUntitledAttachments && onAttachment
+				onAttachment: onUntitledAttachment
 			})
 		}
 		// If no text was generated, then continue with not skipping
@@ -105,7 +104,7 @@ export default function generatePostQuote(post, _options) {
 			text.replace(/\n\n+/g, '\n'),
 			maxLength,
 			{
-				countNewLines,
+				countNewLines: true,
 				fitFactor
 			}
 		)

@@ -1,28 +1,28 @@
-export default function compileWordPatterns(filters, language) {
-	return filters.reduce((all, filter) => all.concat(compileWordPattern(filter, language)), [])
+export default function compileWordPatterns(patterns, language) {
+	return patterns.reduce((all, pattern) => all.concat(compileWordPattern(pattern, language)), [])
 }
 
-function compileWordPattern(filter, language, includesWordStart, includesWordEnd) {
-	if (includesWordStart === undefined && filter[0] === '^') {
-		filter = filter.slice('^'.length)
+function compileWordPattern(pattern, language, includesWordStart, includesWordEnd) {
+	if (includesWordStart === undefined && pattern[0] === '^') {
+		pattern = pattern.slice('^'.length)
 		return [].concat(
-			compileWordPattern('^' + filter, language, false, includesWordEnd),
-			compileWordPattern('[' + getNonLetter(language) + ']' + filter, language, true, includesWordEnd)
+			compileWordPattern('^' + pattern, language, false, includesWordEnd),
+			compileWordPattern('[' + getNonLetter(language) + ']' + pattern, language, true, includesWordEnd)
 		)
 	}
-	if (includesWordEnd === undefined && filter[filter.length - 1] === '$') {
-		filter = filter.slice(0, filter.length - '$'.length)
+	if (includesWordEnd === undefined && pattern[pattern.length - 1] === '$') {
+		pattern = pattern.slice(0, pattern.length - '$'.length)
 		return [].concat(
-			compileWordPattern(filter + '$', language, includesWordStart, false),
-			compileWordPattern(filter + '[' + getNonLetter(language) + ']', language, includesWordStart, true)
+			compileWordPattern(pattern + '$', language, includesWordStart, false),
+			compileWordPattern(pattern + '[' + getNonLetter(language) + ']', language, includesWordStart, true)
 		)
 	}
 	// Replace letters.
-	filter = filter.replace(/\./g, '[' + getLetter(language) + ']')
+	pattern = pattern.replace(/\./g, '[' + getLetter(language) + ']')
 	return {
 		includesWordStart,
 		includesWordEnd,
-		regexp: new RegExp(filter, 'i')
+		regexp: new RegExp(pattern, 'i')
 	}
 }
 

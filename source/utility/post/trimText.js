@@ -12,16 +12,17 @@ const NEW_LINE_COST = 30
  * @param  {number} maxLength
  * @param  {boolean} [options.countNewLines] — Set to `true` to count new lines as `30` characters. Is `false` by default.
  * @param  {number} [options.fitFactor] — Is `1` by default.
+ * @param  {string} [options.trimPoint] — Preferrable trim point. Can be `undefined` (default), "sentence-end", "sentence-or-word-end". By default it starts with seeing if it can trim at "sentence-end", then tries to trim at "sentence-or-word-end", and then just trims at any point.
  * @return {string}
  */
 export default function trimText(string, maxLength, options) {
-	let method
+	let trimPoint
 	if (typeof options === 'string') {
-		method = options
+		trimPoint = options
 		options = undefined
 	} else {
 		if (options) {
-			method = options.method
+			trimPoint = options.trimPoint
 		}
 	}
 	const fitFactor = options && options.fitFactor || 1
@@ -46,7 +47,7 @@ export default function trimText(string, maxLength, options) {
 						break
 					}
 					const reFitFactor = 1 + maxLength * (fitFactor - 1) / pointsLeft
-					line = _trimText(line, pointsLeft, method, reFitFactor)
+					line = _trimText(line, pointsLeft, trimPoint, reFitFactor)
 				}
 			}
 			if (!line) {
@@ -60,15 +61,15 @@ export default function trimText(string, maxLength, options) {
 		// Remove the leading `\n`.
 		return string.slice('\n'.length)
 	}
-	return _trimText(string, maxLength, method, fitFactor)
+	return _trimText(string, maxLength, trimPoint, fitFactor)
 }
 
-function _trimText(string, maxLength, method, fitFactor) {
+function _trimText(string, maxLength, trimPoint, fitFactor) {
 	if (string.length <= maxLength * fitFactor) {
 		return string
 	}
 	// Trim by end of sentence.
-	if (!method || method === 'sentence-end' || method === 'sentence-or-word-end') {
+	if (!trimPoint || trimPoint === 'sentence-end' || trimPoint === 'sentence-or-word-end') {
 		const longerSubstring = string.slice(0, maxLength * fitFactor)
 		const result = trimByEndOfSentence(longerSubstring)
 		if (result && result.length > 0.7 * maxLength) {
@@ -77,14 +78,14 @@ function _trimText(string, maxLength, method, fitFactor) {
 	}
 	string = string.slice(0, maxLength)
 	// Trim by end of word (if available).
-	if (!method || method === 'sentence-or-word-end') {
+	if (!trimPoint || trimPoint === 'sentence-or-word-end') {
 		const lastWordEndsAtPlusOne = string.lastIndexOf(' ')
 		if (lastWordEndsAtPlusOne >= 0 && lastWordEndsAtPlusOne > 0.8 * maxLength) {
 			return string.slice(0, lastWordEndsAtPlusOne).trim() + ' ' + '…'
 		}
 	}
 	// Simple trim.
-	if (!method) {
+	if (!trimPoint) {
 		return string.slice(0, maxLength) + '…'
 	}
 }

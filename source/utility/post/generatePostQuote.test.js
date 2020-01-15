@@ -41,8 +41,7 @@ describe('generatePostQuote', () => {
 		}, {
 			maxLength: 100,
 			messages,
-			embedUntitledAttachments: true,
-			onAttachment: _ => attachment = _
+			onUntitledAttachment: _ => attachment = _
 		}).should.equal('Picture')
 		attachment.id.should.equal(1)
 	})
@@ -58,8 +57,7 @@ describe('generatePostQuote', () => {
 		}, {
 			maxLength: 100,
 			messages,
-			embedUntitledAttachments: true,
-			onAttachment: _ => attachment = _
+			onUntitledAttachment: _ => attachment = _
 		}).should.equal('Picture')
 		attachment.id.should.equal(1)
 	})
