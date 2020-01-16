@@ -126,13 +126,18 @@ Videos can be video files or videos provided by some service like YouTube. Video
 
 	// File extension with a dot.
 	// Example: ".pdf".
-	ext: string,
+	// A file could possibly have no extension.
+	ext: string?,
 
 	// File size (in bytes).
-	size: number,
+	size: number?,
 
 	// File URL.
-	url: string
+	url: string,
+
+	// File thumbnail.
+	// For example, a PDF document might have a thumbnail.
+	picture: Picture?
 }
 ```
 
