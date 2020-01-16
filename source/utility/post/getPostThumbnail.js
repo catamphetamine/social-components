@@ -1,11 +1,12 @@
 import getMinSize from '../picture/getMinSize'
-import isEmbeddedAttachment from './isEmbeddedAttachment'
-import getSortedAttachments from './getSortedAttachments'
+import getNonEmbeddedAttachments from './getNonEmbeddedAttachments'
+import getPicturesAndVideos from './getPicturesAndVideos'
+import { sortByThumbnailHeightDescending } from './getSortedAttachments'
 // import countPostBlockCharacters from './countPostBlockCharacters'
 
 export default function getPostThumbnailAttachment(post, { showPostThumbnailWhenThereAreMultipleAttachments }) {
 	if (shouldCreateThumbnail(post, { showPostThumbnailWhenThereAreMultipleAttachments })) {
-		return getAttachments(post).find((attachment) => {
+		return getThumbnailAttachments(post).find((attachment) => {
 			switch (attachment.type) {
 				case 'picture':
 					return attachment
@@ -33,8 +34,10 @@ export function getPostThumbnailSize(attachment) {
 	}
 }
 
-function getAttachments(post) {
-	return getSortedAttachments(post).filter(_ => !isEmbeddedAttachment(_, post))
+function getThumbnailAttachments(post) {
+	const picturesAndVideos = getPicturesAndVideos(getNonEmbeddedAttachments(post))
+	sortByThumbnailHeightDescending(picturesAndVideos)
+	return picturesAndVideos
 }
 
 function shouldCreateThumbnail(post, { showPostThumbnailWhenThereAreMultipleAttachments }) {
@@ -45,7 +48,7 @@ function shouldCreateThumbnail(post, { showPostThumbnailWhenThereAreMultipleAtta
 	// If there's more than a single attachment
 	// then don't show post thumbnail.
 	if (!showPostThumbnailWhenThereAreMultipleAttachments) {
-		if (getAttachments(post).length > 1) {
+		if (getThumbnailAttachments(post).length > 1) {
 			return false
 		}
 	}
