@@ -1,7 +1,0 @@
-{
-  "name": "fetch-jsonp",
-  "description": "This is just a stub for `fetch-jsonp` so that the tests don't throw 'window is undefined'",
-  "version": "0.0.0",
-  "main": "./node.js",
-  "browser": "./browser.js"
-}

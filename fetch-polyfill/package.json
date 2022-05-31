@@ -1,7 +1,0 @@
-{
-  "name": "fetch-polyfill",
-  "description": "`fetch()` is not supported in Node.js",
-  "version": "0.0.0",
-  "main": "./node.js",
-  "browser": "./browser.js"
-}
