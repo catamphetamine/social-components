@@ -27,9 +27,9 @@ export default class YouTubeVideoCache {
 		return cachedVideo
 	}
 
-	// clear() {
-	// 	this.cache.clear()
-	// }
+	clear() {
+		this.cache.clear()
+	}
 }
 
 // An archived video is about 100 bytes in size (tested on a 1000 cached videos).

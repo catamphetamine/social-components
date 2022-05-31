@@ -19,4 +19,16 @@ export default class ResourceCache {
 				return this.youTubeVideoCache.put(key, value)
 		}
 	}
+
+	clear(service) {
+		if (!service) {
+			this.youTubeVideoCache.clear()
+			return
+		}
+
+		switch (service) {
+			case 'youtube':
+				return this.youTubeVideoCache.clear()
+		}
+	}
 }
