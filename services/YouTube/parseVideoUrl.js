@@ -9,13 +9,13 @@ export default function parseVideoUrl(url) {
 		if (location.search) {
 			id = location.searchParams.get('v')
 			if (location.searchParams.get('t')) {
-				startAt = parseInt(location.searchParams.get('t'))
+				startAt = Number(location.searchParams.get('t'))
 			}
 		}
 	} else if (location.hostname === 'youtu.be') {
 		id = location.pathname.slice('/'.length)
 		if (location.searchParams.get('t')) {
-			startAt = parseInt(location.searchParams.get('t'))
+			startAt = Number(location.searchParams.get('t'))
 		}
 	}
 	return {

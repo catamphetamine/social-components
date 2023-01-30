@@ -98,6 +98,7 @@ export default function loadPostResourceLinks(post, {
 			onContentChange()
 		}
 	}
+
 	let cancelled
 	function onResult(foundSomething) {
 		if (cancelled) {
@@ -110,6 +111,7 @@ export default function loadPostResourceLinks(post, {
 			onPostLinkAttachmentLoaded()
 		}
 	}
+
 	let results = [
 		loadResourceLinks(post.content, RESOURCES, {
 			cache,
@@ -118,14 +120,17 @@ export default function loadPostResourceLinks(post, {
 			messages
 		})
 	]
+
 	// if (sync) {
 	// 	return onResult(results.findIndex(_ => _) >= 0)
 	// }
+
 	// This is a point of customization to add some other custom resource loaders.
 	// Is used in `captchan` to fix `lynxchan` post attachment sizes and URLs.
 	if (loadResources) {
 		results = results.concat(loadResources())
 	}
+
 	return {
 		promise: resolvePromises(results, onResult),
 		// Calling `.cancel()` prevents the `loadResourceLinks()` function

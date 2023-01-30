@@ -242,7 +242,7 @@ function parseISO8601Duration(duration) {
 		hours,
 		minutes,
 		seconds
-	] = match.slice(1).map(_ => _ ? parseInt(_.replace(/\D/, '')) : 0)
+	] = match.slice(1).map(_ => _ ? Number(_.replace(/\D/, '')) : 0)
   return (((years * 365 + weeks * 7 + days) * 24 + hours) * 60 + minutes) * 60 + seconds
 }
 

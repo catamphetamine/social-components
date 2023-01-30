@@ -71,8 +71,8 @@ export function parseTweetDateText(dateText) {
   const match = dateText.match(/^([A-Za-z]+) (\d+), (\d+)$/)
   if (match) {
   	const monthIndex = MONTHS.indexOf(match[1])
-  	const day = parseInt(match[2])
-  	const year = parseInt(match[3])
+  	const day = Number(match[2])
+  	const year = Number(match[3])
   	return new Date(year, monthIndex, day)
   }
 }
