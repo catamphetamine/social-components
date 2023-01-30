@@ -19,6 +19,7 @@ import { getDomainName } from '../url.js'
  * @param  {boolean} [options.skipNonEmbeddedAttachments] — Skip non-embedded attachments. Is `true` by default.
  * @param  {boolean} [options.skipUntitledAttachments] — Skip untitled attachments (embedded and non-embedded). Is `true` by default.
  * @param  {function} [options.onAttachment] — Is called every time an untitled attachment likely becomes part of the generated text. "Likely", because the text might get trimmed in such a way that the untitled attachment isn't part of it.
+ * @param  {function} [options.formatUntitledLink] — Formats a link object into a text.
  * @param  {boolean} [options.trimCodeBlocksToFirstLine] — Trim code blocks to first line. Is `true` by default.
  * @param  {boolean} [options.stopOnNewLine] — If `true` then the function will stop on the first "new line" character of the generated text.
  * @param  {string} [options.openingQuote] — Opening quote character used to generate inline `post-link` quoted text content. Is `«` by default.
@@ -199,15 +200,18 @@ export function getContentText(content, softLimit, options = {}) {
 			return part.content
 		case 'link':
 			if (part.contentGenerated) {
-				const { formatLink, messages } = options
-				if (formatLink) {
-					const linkText = formatLink(part)
+				const { formatUntitledLink, messages } = options
+				if (formatUntitledLink) {
+					const linkText = formatUntitledLink(part, {
+						getDomain: getDomainName,
+						getHumanReadableUrl: getHumanReadableLinkAddress
+					})
 					if (linkText) {
 						return linkText
 					}
 				}
 				if (messages && messages.contentType && messages.contentType.linkTo) {
-					return messages.contentType.linkTo.replace('{url}', getDomainName(part.url))
+					return messages.contentType.linkTo.replace('{domain}', getDomainName(part.url))
 				}
 				return getHumanReadableLinkAddress(part.url)
 			}

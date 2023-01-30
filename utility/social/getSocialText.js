@@ -35,7 +35,7 @@ function getSocialAuthorText(social) {
 	}
 }
 
-function getSocialContentText(social, messages) {
+function getSocialContentText(social, contentTypeLabels) {
 	if (social.content) {
 		return `${LEFT_QUOTE}${social.content}${RIGHT_QUOTE}`
 	}
