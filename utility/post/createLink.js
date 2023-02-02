@@ -1,4 +1,4 @@
-import parseServiceLink from '../parseServiceLink.js'
+import parseServiceLink from '../link/parseServiceLink.js'
 import getHumanReadableLinkAddress from '../getHumanReadableLinkAddress.js'
 
 /**

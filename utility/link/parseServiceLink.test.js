@@ -1,4 +1,4 @@
-import expectToEqual from './expectToEqual.js'
+import expectToEqual from '../expectToEqual.js'
 import parseServiceLink from './parseServiceLink.js'
 
 describe('parseServiceLink', () => {
