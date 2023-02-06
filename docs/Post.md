@@ -1,8 +1,15 @@
 ## Post
 
-A post can have:
+A `Post` object has properties:
 
-* `author`
-* `date: Date`
-* [`content`](https://gitlab.com/catamphetamine/social-components/tree/master/docs/Content.md)
-* [`attachments`](https://gitlab.com/catamphetamine/social-components/tree/master/docs/Attachments.md).
+* `id?: string | number`
+* `title?: string`
+* `titleCensored?: string` — An optional "censored" version of a title. Example: `"John is a ░​░​░​░​░​░​░​░​"`.
+* `author?: object`
+  * `id?: string | number`
+  * `name?: string`
+  * [`picture?: Picture`](https://gitlab.com/catamphetamine/social-components/tree/master/docs/ContentTypes.md#picture)
+* `createdAt?: Date`
+* [`content?: Content`](https://gitlab.com/catamphetamine/social-components/tree/master/docs/Content.md)
+* [`attachments?: Attachment[]`](https://gitlab.com/catamphetamine/social-components/tree/master/docs/Attachments.md).
+* `replies?: Post[]`
