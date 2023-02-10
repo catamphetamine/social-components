@@ -87,8 +87,8 @@ Availble `options`:
 
 * All `getPostText()` options are passed through.
 * `maxLength: number` — A limit on the resulting text length.
-* `minFitFactor: number?` — Provides some flexibility on `maxLength`. See `minFitFactor` option of `trimText()`.
-* `minFitFactor: number?` — Provides some flexibility on `maxLength`. See `maxFitFactor` option of `trimText()`.
+* `minFitFactor: number?` — Provides some flexibility when defining `maxLength` lower boundary. See `minFitFactor` option of `trimText()`.
+* `maxFitFactor: number?` — Provides some flexibility when defining `maxLength` upper boundary. See `maxFitFactor` option of `trimText()`.
 * `getCharactersCountPenaltyForLineBreak?: ({ textBefore: string }) => number` — See `getCharactersCountPenaltyForLineBreak` option of `trimText()`.
 * `trimMarkEndOfLine: string?` — See `trimMarkEndOfLine` option of `trimText()`.
 * `trimMarkEndOfSentence: string?` — See `trimMarkEndOfSentence` option of `trimText()`.
@@ -106,8 +106,8 @@ Generates a preview for a [`Post`](https://gitlab.com/catamphetamine/social-comp
 Available `options`:
 
 * `maxLength: number` — Preview content (soft) limit (in "points": for text, one "point" is equal to one character, while any other non-text content has its own "points", including attachments and new line character).
-* `minFitFactor: number?` — Provides some flexibility on `maxLength`. Sets the usual lower limit of content trimming length at `minFitFactor * maxLength`: if content surpasses `maxFitFactor * maxLength` limit, then it usually can be trimmed anywhere between `minFitFactor * maxLength` and `maxFitFactor * maxLength`. Is `1.2` by default.
-* `minFitFactor: number?` — Provides some flexibility on `maxLength`. Sets the usual upper limit of content trimming length at `maxFitFactor * maxLength`: if content surpasses `maxFitFactor * maxLength` limit, then it usually can be trimmed anywhere between `minFitFactor * maxLength` and `maxFitFactor * maxLength`. Is `0.75` by default.
+* `minFitFactor: number?` — Provides some flexibility when defining `maxLength` lower boundary: sets it to `minFitFactor * maxLength`. The content then can usually be trimmed anywhere between `minFitFactor * maxLength` and `maxFitFactor * maxLength`. Is `0.75` by default.
+* `maxFitFactor: number?` — Provides some flexibility when defining `maxLength` upper boundary: sets it to `maxFitFactor * maxLength`. The content then can usually be trimmed anywhere between `minFitFactor * maxLength` and `maxFitFactor * maxLength` limit. Is `1.2` by default.
 * `textTrimMarkEndOfWord: string?` — Appends this "trim mark" when text has to be trimmed after word end (but not after sentence end). Is "…" by default.
 * `textTrimMarkAbrupt: string?` — Appends this "trim mark" when text has to be trimmed mid-word. Is "…" by default.
 * `minimizeGeneratedPostLinkBlockQuotes: boolean?` — Set to `true` to indicate that post links with generated block quotes are initially minimized when rendered: this results in skipping counting those post links' content characters when generating post preview.
@@ -122,8 +122,8 @@ Trims the `text` at `maxLength`.
 
 Available `options`:
 
-* `minFitFactor: number?` — Provides some flexibility on `maxLength`. Sets the lower limit of text trimming length at `minFitFactor * maxLength`: if text length surpasses `maxFitFactor * maxLength` limit, then it can be trimmed anywhere between `minFitFactor * maxLength` and `maxFitFactor * maxLength`. Is `1` by default, meaning "no effect".
-* `minFitFactor: number?` — Provides some flexibility on `maxLength`. Sets the upper limit of text trimming length at `maxFitFactor * maxLength`: if text length surpasses `maxFitFactor * maxLength` limit, then it can be trimmed anywhere between `minFitFactor * maxLength` and `maxFitFactor * maxLength`. Is `1` by default, meaning "no effect".
+* `minFitFactor: number?` — Provides some flexibility when defining `maxLength` lower boundary: sets it to `minFitFactor * maxLength`. The content then can usually be trimmed anywhere between `minFitFactor * maxLength` and `maxFitFactor * maxLength`. Is `1` by default, meaning "no effect".
+* `maxFitFactor: number?` — Provides some flexibility when defining `maxLength` upper boundary: sets it to `maxFitFactor * maxLength`. The content then can usually be trimmed anywhere between `minFitFactor * maxLength` and `maxFitFactor * maxLength` limit. Is `1` by default, meaning "no effect".
 * `getCharactersCountPenaltyForLineBreak?: ({ textBefore: string }) => number` — Returns characters count equivalent for a "line break" (`\n`) character. The idea is to "tax" multi-line texts when trimming by characters count. By default, having `\n` characters in text is not penalized in any way and those characters aren't counted.
 * `trimPoint: string?` — Preferrable trim point. Can be `undefined` (default), `"sentence-end"`, `"sentence-or-word-end"`.Preferrable trim point. By default it starts with seeing if it can trim at `"sentence-end"`, then tries to trim at `"sentence-or-word-end"`, and then just trims at any point.
 * `trimMarkEndOfLine: string?` — "Trim mark" when trimming at the end of a line. Is "" (no trim mark) by default.

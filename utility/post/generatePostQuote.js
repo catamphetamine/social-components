@@ -8,7 +8,7 @@ const CHARACTERS_COUNT_PENALTY_FOR_LINE_BREAK = 15
  * Returns post text: first tries without post quotes, then tries with post quotes (unless `skipPostQuoteBlocks: true` option is passed).
  * @param  {object} post
  * @param  {number} options.maxLength — See `maxLength` argument of `trimText()`.
- * @param  {function} [options.getCharactersCountPenaltyForLineBreak] — Returns characters count equivalent for a "line break" (`\n`) character. The idea is to "tax" multi-line texts when trimming by characters count. By default, having `\n` characters in text is not penalized in any way and those characters aren't counted.
+ * @param  {function} [options.getCharactersCountPenaltyForLineBreak] — Returns characters count equivalent for a "line break" (`\n`) character. The idea is to "tax" multi-line texts when trimming by characters count. Returns something like `15` by default.
  * @param  {number} [options.minFitFactor] — See `minFitFactor` option of `trimText()`.
  * @param  {number} [options.maxFitFactor] — See `maxFitFactor` option of `trimText()`.
  * @param  {string} [options.trimMarkEndOfLine] — "Trim mark" when trimming at the end of a line. Is " …" by default. See `trimMarkEndOfLine` option of `trimText()`.

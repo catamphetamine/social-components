@@ -22,8 +22,8 @@ const TEXT_TRIM_MARK_ABRUPT = '…'
  * Generates a shortened "preview" of a post's `content`.
  * @param  {Post} post.
  * @param  {number} options.maxLength — Preview content (soft) limit (in "points": for text, one "point" is equal to one character, while any other non-text content has its own "points", including attachments and new line character).
- * @param  {number} [options.minFitFactor] — `maxLength` flexibility lower limit. See `minFitFactor` option of `trimText()`.
- * @param  {number} [options.maxFitFactor] — `maxLength` flexibility upper limit. See `maxFitFactor` option of `trimText()`.
+ * @param  {number} [options.minFitFactor] — `maxLength` lower limit extension. See `minFitFactor` option of `trimText()`.
+ * @param  {number} [options.maxFitFactor] — `maxLength` upper limit extension. See `maxFitFactor` option of `trimText()`.
  * @param  {string} [options.textTrimMarkEndOfWord] — Appends this "trim mark" when text has to be trimmed after word end (but not after sentence end). Is "…" by default.
  * @param  {string} [options.textTrimMarkAbrupt] — Appends this "trim mark" when text has to be trimmed mid-word. Is "…" by default.
  * @param  {boolean} [options.minimizeGeneratedPostLinkBlockQuotes] — Set to `true` to indicate that post links with generated block quotes are initially minimized when rendered: this results in skipping counting those post links' content characters when generating post preview.
@@ -51,8 +51,8 @@ class PreviewGenerator {
 	 * @param {Content} content — Post `content`. Can't be `undefined`.
 	 * @param {object[]} [attachments] — If the `content` has any embedded attachments, `attachments` list must be passed.
 	 * @param {number} options.maxLength — Preview content (soft) limit (in "points": for text, one "point" is equal to one character, while any other non-text content has its own "points", including attachments and new line character).
-   * @param  {number} [options.minFitFactor] — `maxLength` flexibility lower limit. See `minFitFactor` option of `trimText()`.
-   * @param  {number} [options.maxFitFactor] — `maxLength` flexibility upper limit. See `maxFitFactor` option of `trimText()`.
+   * @param  {number} [options.minFitFactor] — `maxLength` lower limit extension. See `minFitFactor` option of `trimText()`.
+   * @param  {number} [options.maxFitFactor] — `maxLength` upper limit extension. See `maxFitFactor` option of `trimText()`.
 	 */
 	constructor(content, attachments, options) {
 		this.content = content

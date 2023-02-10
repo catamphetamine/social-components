@@ -18,8 +18,8 @@ const DEFAULT_TRIM_MARK_ABRUPT = '…'
  * @param  {string} string
  * @param  {number} maxLength
  * @param  {function} [options.getCharactersCountPenaltyForLineBreak] — Returns characters count equivalent for a "line break" (`\n`) character. The idea is to "tax" multi-line texts when trimming by characters count. By default, having `\n` characters in text is not penalized in any way and those characters aren't counted.
- * @param  {number} [options.minFitFactor] — How much flexible is `maxLength`. Example: `1.35` means `maxLength` could be `1.35 * maxLength`.
- * @param  {number} [options.maxFitFactor] — How much flexible is `minLength`. Example: `0.75` means `minLength` could be `0.75 * maxLength`.
+ * @param  {number} [options.minFitFactor] — `maxLength` lower boundary extension. Example: `0.75` means `minLength` could be `0.75 * maxLength`.
+ * @param  {number} [options.maxFitFactor] — `maxLength` upper boundary extension. Example: `1.35` means `maxLength` could be `1.35 * maxLength`.
  * @param  {string} [options.trimPoint] — Preferrable trim point. Can be `undefined` (default), "sentence-end", "sentence-or-word-end". By default it starts with seeing if it can trim at "sentence-end", then tries to trim at "sentence-or-word-end", and then just trims at any point.
  * @param  {string} [options.trimMarkEndOfLine] — "Trim mark" when trimming at the end of a line. Is "" (no trim mark) by default.
  * @param  {string} [options.trimMarkEndOfSentence] — "Trim mark" when trimming at the end of a sentence. Is "" (no trim mark) by default.
@@ -77,32 +77,37 @@ export default function trimText(string, maxLength, options = {}) {
 	let i = 0
 	while (i < lines.length) {
 		let line = lines[i]
+		// If the line is too long then see if it could be trimmed.
 		if (line.length > pointsLeft) {
+			// See if the line fits with `maxFitFactor`.
 			// Using `(characters + pointsLeft)` instead of `maxLength` here
 			// because `(characters + pointsLeft)` doesn't count new lines
 			// and is therefore more appropriate for "relative text length" comparisons.
 			if (characters + line.length <= (characters + pointsLeft) * maxFitFactor) {
-				// Append the line as is because it fits.
+				// Append the line as is because it fits with `maxFitFactor`.
 			} else {
-				const reFitFactorMin = 1 + maxLength * (minFitFactor - 1) / pointsLeft
-				const reFitFactorMax = 1 + maxLength * (maxFitFactor - 1) / pointsLeft
-				// If the line to be trimmed wouldn't result in much text anyway
-				// due to its maximum possible trimmed length being too small
-				// then it can just be omitted.
+				// The line doesn't fit with `maxFitFactor`. See if it could be trimmed.
+				// Scale `minFitFactor` and `maxFitFactor` proportionately for this line.
+				const minFitFactorForLine = 1 - (1 - minFitFactor) * (maxLength / pointsLeft)
+				const maxFitFactorForLine = 1 + (maxFitFactor - 1) * (maxLength / pointsLeft)
+				// If, without appending this line, there's already enough characters
+				// in the `string` so far, then there's no need to append this line at all.
 				// Using `(characters + pointsLeft)` instead of `maxLength` here
 				// because `(characters + pointsLeft)` doesn't count new lines
 				// and is therefore more appropriate for "relative text length" comparisons.
 				if (characters >= (characters + pointsLeft) * minFitFactor) {
-					const lineTrimmedAtSentenceEnd = _trimText(line, pointsLeft, 'sentence-end', reFitFactorMin, reFitFactorMax, trimMarkEndOfLine, trimMarkEndOfSentence, trimMarkEndOfWord, trimMarkAbrupt)
+					// See if this line could be trimmed at sentence end.
+					// If it can, then append it in its trimmed variant.
+					// If it can't, then just ignore this line, since there's already enough characters.
+					const lineTrimmedAtSentenceEnd = _trimText(line, pointsLeft, 'sentence-end', minFitFactorForLine, maxFitFactorForLine, trimMarkEndOfLine, trimMarkEndOfSentence, trimMarkEndOfWord, trimMarkAbrupt)
 					if (lineTrimmedAtSentenceEnd) {
 						line = lineTrimmedAtSentenceEnd
 					} else {
-						// Omits the last line, because it doesn't result in
-						// relatively much text anyway.
+						// Omit the last line, because it doesn't result in relatively much text anyway.
 						line = undefined
 					}
 				} else {
-					line = _trimText(line, pointsLeft, trimPoint, reFitFactorMin, reFitFactorMax, trimMarkEndOfLine, trimMarkEndOfSentence, trimMarkEndOfWord, trimMarkAbrupt)
+					line = _trimText(line, pointsLeft, trimPoint, minFitFactorForLine, maxFitFactorForLine, trimMarkEndOfLine, trimMarkEndOfSentence, trimMarkEndOfWord, trimMarkAbrupt)
 				}
 			}
 		}
@@ -146,8 +151,12 @@ function _trimText(string, maxLength, trimPoint, minFitFactor, maxFitFactor, tri
 	if (!trimPoint || trimPoint === 'sentence-end' || trimPoint === 'sentence-or-word-end') {
 		const longerSubstring = string.slice(0, maxLength * maxFitFactor)
 		const result = trimByEndOfSentence(longerSubstring)
-		if (result && result.length >= minFitFactor * maxLength) {
-			return result + trimMarkEndOfSentence
+		if (result) {
+			if (result.length <= maxLength * maxFitFactor) {
+				if (result.length >= maxLength * minFitFactor) {
+					return result + trimMarkEndOfSentence
+				}
+			}
 		}
 	}
 	string = string.slice(0, maxLength * maxFitFactor)
@@ -157,7 +166,7 @@ function _trimText(string, maxLength, trimPoint, minFitFactor, maxFitFactor, tri
 		// and didn't find any, so if it finds something here, then it's end of word.
 		const lastWordEndsAtPlusOne = string.lastIndexOf(' ')
 		if (lastWordEndsAtPlusOne >= 0 && lastWordEndsAtPlusOne >= minFitFactor * maxLength) {
-			return string.slice(0, lastWordEndsAtPlusOne).trim() + trimMarkEndOfWord
+			return string.slice(0, lastWordEndsAtPlusOne) + trimMarkEndOfWord
 		}
 	}
 	// Simple trim.
