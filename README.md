@@ -50,6 +50,7 @@ Availble `options`:
  * `skipAttachments: boolean?` — Skip attachments (embedded and non-embedded). Is `true` by default.
  * `skipNonEmbeddedAttachments: boolean?` — Skip non-embedded attachments. Is `true` by default.
  * `skipUntitledAttachments: boolean?` — Skip untitled attachments (embedded and non-embedded). Is `true` by default.
+ * `spaceOutParagraphs: boolean?` — Defines how text for adjacent content blocks should be concatenated. By default, it concatenates it with `\n\n`. It `spaceOutParagraphs: false` flag is passed, it concatenates the text for adjacent content blocks with `\n`.
  * `trimCodeBlocksToFirstLine: boolean?` — Trim code blocks to first line. Is `true` by default.
  * `stopOnNewLine: boolean?` — If `true` then the function will stop on the first "new line" character of the generated text.
 

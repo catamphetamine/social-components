@@ -17,6 +17,7 @@ import parseUrl from '../parseUrl.js'
  * @param  {boolean} [options.skipAttachments] — Skip attachments (embedded and non-embedded). Is `true` by default.
  * @param  {boolean} [options.skipNonEmbeddedAttachments] — Skip non-embedded attachments. Is `true` by default.
  * @param  {boolean} [options.skipUntitledAttachments] — Skip untitled attachments (embedded and non-embedded). Is `true` by default.
+ * @param  {boolean} [options.spaceOutParagraphs] — Defines how text for adjacent content blocks should be concatenated. By default, it concatenates it with `\n\n`. It `spaceOutParagraphs: false` flag is passed, it concatenates the text for adjacent content blocks with `\n`.
  * @param  {function} [options.onAttachment] — Is called every time an untitled attachment likely becomes part of the generated text. "Likely", because the text might get trimmed in such a way that the untitled attachment isn't part of it.
  * @param  {function} [options.getLinkTitle] — Formats a link object into a text.
  * @param  {boolean} [options.trimCodeBlocksToFirstLine] — Trim code blocks to first line. Is `true` by default.
