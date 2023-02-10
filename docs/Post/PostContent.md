@@ -1,1 +1,0 @@
-The document was moved to [`../Content.md`](https://gitlab.com/catamphetamine/social-components/tree/master/docs/Content.md).
