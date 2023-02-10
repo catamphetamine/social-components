@@ -41,14 +41,22 @@ function findParagraphSplit(content) {
 		if (part === '\n') {
 			skip = 1
 			let nextPart
+			let splitPointFound
 			while ((nextPart = getNextPart(skip)) !== undefined) {
 				if (nextPart === '\n') {
-					return true
+					if (!splitPointFound) {
+						splitPointFound = true
+					}
 				}
 				if (!WHITESPACE.test(nextPart)) {
-					return
+					skip--
+					return splitPointFound
 				}
 				skip++
+			}
+			if (splitPointFound) {
+				skip--
+				return true
 			}
 		}
 	})

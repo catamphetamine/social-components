@@ -40,7 +40,6 @@ describe('splitContentIntoBlocksByMultipleLineBreaks', () => {
 					'abc'
 				],
 				[
-					'\n',
 					'def'
 				]
 			]
@@ -67,12 +66,7 @@ describe('splitContentIntoBlocksByMultipleLineBreaks', () => {
 					'Abc.\n'
 				],
 				[
-					"\n",
 					"\nDef.\n"
-				],
-				[
-					"\n",
-					"\n"
 				]
 			]
 		)
@@ -106,6 +100,41 @@ describe('splitContentIntoBlocksByMultipleLineBreaks', () => {
 			],
 			[
 				[
+					'abc'
+				]
+			]
+		)
+	})
+
+	it('should trim multiple empty lines at the start', () => {
+		splitContentIntoBlocksByMultipleLineBreaksTest(
+			[
+				[
+					'\n',
+					'\n',
+					'\n',
+					'abc'
+				]
+			],
+			[
+				[
+					'abc'
+				]
+			]
+		)
+	})
+
+	it('should not trim single empty line at the start', () => {
+		splitContentIntoBlocksByMultipleLineBreaksTest(
+			[
+				[
+					'\n',
+					'abc'
+				]
+			],
+			[
+				[
+					'\n',
 					'abc'
 				]
 			]
@@ -192,10 +221,7 @@ describe('splitContentIntoBlocksByMultipleLineBreaks', () => {
 							{
 								type: 'text',
 								style: 'italic',
-								content: [
-									'\n',
-									'jkl'
-								]
+								content: 'jkl'
 							},
 							{
 								type: 'text',
