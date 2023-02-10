@@ -18,7 +18,7 @@ import parseUrl from '../parseUrl.js'
  * @param  {boolean} [options.skipNonEmbeddedAttachments] — Skip non-embedded attachments. Is `true` by default.
  * @param  {boolean} [options.skipUntitledAttachments] — Skip untitled attachments (embedded and non-embedded). Is `true` by default.
  * @param  {function} [options.onAttachment] — Is called every time an untitled attachment likely becomes part of the generated text. "Likely", because the text might get trimmed in such a way that the untitled attachment isn't part of it.
- * @param  {function} [options.formatUntitledLink] — Formats a link object into a text.
+ * @param  {function} [options.getLinkTitle] — Formats a link object into a text.
  * @param  {boolean} [options.trimCodeBlocksToFirstLine] — Trim code blocks to first line. Is `true` by default.
  * @param  {boolean} [options.stopOnNewLine] — If `true` then the function will stop on the first "new line" character of the generated text.
  * @param  {string} [options.openingQuote] — Opening quote character used to generate inline `post-link` quoted text content. Is `«` by default.
@@ -199,14 +199,14 @@ export function getContentText(content, softLimit, options = {}) {
 			return part.content
 		case 'link':
 			if (part.contentGenerated) {
-				const { formatUntitledLink, messages } = options
-				if (formatUntitledLink) {
-					const linkText = formatUntitledLink(part)
+				const { getLinkTitle, messages } = options
+				if (getLinkTitle) {
+					const linkText = getLinkTitle(part)
 					if (linkText) {
 						return linkText
 					}
 				}
-				const linkText_ = formatUntitledLinkDefault(part, { messages })
+				const linkText_ = getLinkTitleDefault(part, { messages })
 				if (linkText_) {
 					return linkText_
 				}
@@ -267,7 +267,7 @@ function countOccurrences(string, character) {
 	return count
 }
 
-function formatUntitledLinkDefault(link, { messages }) {
+function getLinkTitleDefault(link, { messages }) {
 	if (messages && messages.textContent && messages.textContent.inline) {
 		const inlineContentTypeLabels = messages.textContent.inline
 		const { domain, path } = parseUrl(link.url)
