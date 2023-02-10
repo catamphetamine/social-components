@@ -63,8 +63,8 @@ const REST_ATTACHMENT_TYPES_ORDER = [
 ]
 
 function sortRestAttachments(a, b) {
-	const aIndex = REST_ATTACHMENT_TYPES_ORDER.indexOf(a.type)
-	const bIndex = REST_ATTACHMENT_TYPES_ORDER.indexOf(b.type)
+	let aIndex = REST_ATTACHMENT_TYPES_ORDER.indexOf(a.type)
+	let bIndex = REST_ATTACHMENT_TYPES_ORDER.indexOf(b.type)
 	if (aIndex < 0) {
 		aIndex = REST_ATTACHMENT_TYPES_ORDER.length
 	}
