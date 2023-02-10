@@ -1,3 +1,8 @@
+0.3.0 / 10.02.2023
+===================
+
+* Changed the structure of `messages`. See the README.
+
 0.2.0 / 13.05.2022
 ===================
 

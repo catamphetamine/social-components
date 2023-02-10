@@ -1,0 +1,16 @@
+{
+	"videoNotFound": "Video nicht gefunden",
+	"textContent": {
+		"block": {
+			"picture": "Bild",
+			"video": "Video",
+			"audio": "Audio",
+			"attachment": "Attachment"
+		},
+		"inline": {
+			"attachment": "(attachment)",
+			"link": "(link)",
+			"linkTo": "(link zu {domain})"
+		}
+	}
+}

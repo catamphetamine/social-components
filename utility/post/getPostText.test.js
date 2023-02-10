@@ -11,9 +11,11 @@ function getPostTextTest(post, options, text) {
 }
 
 const messages = {
-	contentType: {
-		picture: 'Picture',
-		video: 'Video'
+	textContent: {
+		block: {
+			picture: 'Picture',
+			video: 'Video'
+		}
 	}
 }
 
@@ -765,8 +767,10 @@ describe('getPostText', () => {
 			},
 			{
 				messages: {
-					contentType: {
-						linkTo: '(link to {domain})'
+					textContent: {
+						inline: {
+							linkTo: '(link to {domain})'
+						}
 					}
 				}
 			},
@@ -806,14 +810,11 @@ describe('getPostText', () => {
 				]
 			},
 			{
-				messages: {
-					contentType: {}
-				},
-				formatUntitledLink: (link, { getDomain }) => {
-					return `(link to ${getDomain(link.url)})`
+				formatUntitledLink: (link) => {
+					return `(link to ${link.url})`
 				}
 			},
-			'(link to google.com)'
+			'(link to https://www.google.com/ru/maps?x=y)'
 		)
 	})
 })

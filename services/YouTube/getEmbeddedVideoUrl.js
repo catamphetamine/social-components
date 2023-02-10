@@ -1,4 +1,4 @@
-import { getUrlQueryPart } from '../../utility/url.js'
+import getUrlQueryStringForParameters from '../../utility/getUrlQueryStringForParameters.js'
 
 export default function getEmbeddedVideoUrl(id, options = {}) {
 	const parameters = {}
@@ -8,5 +8,5 @@ export default function getEmbeddedVideoUrl(id, options = {}) {
 	if (options.startAt) {
 		parameters.start = options.startAt
 	}
-	return `https://www.youtube.com/embed/${id}${getUrlQueryPart(parameters)}`
+	return `https://www.youtube.com/embed/${id}${getUrlQueryStringForParameters(parameters)}`
 }

@@ -20,11 +20,11 @@ import resolvePromises from '../resolvePromises.js'
  * @param  {(string|string[])} [options.youTubeApiKey] — YouTube API key. If it's an array of keys then the first non-erroring one is used.
  * @param  {function} [options.loadResources] — This is a hacky point of customization to add some other custom resource loaders. Is used in `captchan` to fix `lynxchan` post attachment sizes and URLs.
  * @param  {number} [options.contentMaxLength] — If set, will re-generate `.contentPreview` if the updated `content` exceeds the limit (in "points").
- * @param  {object} [options.messages] — Localized labels ("Video", "Picture", etc). Has shape `{ contentType: { video: "Video", ... }, post: { videoNotFound: "Video not found" } }`.
+ * @param  {object} [options.messages] — Localized labels for resource loading. See [Messages](#messages).
  * @param  {boolean} [options.minimizeGeneratedPostLinkBlockQuotes] — See the description of the same option of `generatePostPreview()`.
  * @return {object} Returns an object having a `cancel()` function and a `promise` property. Calling `stop()` function prevents `loadResourceLinks()` from making any further changes to the `post` object. Calling `cancel()` function multiple times or after the `promise` has finished doesn't have any effect. The `promise` is a `Promise` that resolves when all resource links have been loaded. Loading some links may potentially error (for example, if a YouTube video wasn't found). Even if the returned `Promise` errors due to some resource loader, the post content still may have been changed by other resource loaders.
  */
-export default function loadPostResourceLinks(post, {
+export default function loadResourceLinks_(post, {
 	cache,
 	youTubeApiKey,
 	messages,

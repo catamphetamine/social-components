@@ -7,12 +7,6 @@ function loadTwitterLinks(content, options = {}) {
 	return loadResourceLinks(content, { twitter: TwitterResource }, options)
 }
 
-const messages = {
-	contentType: {
-		link: 'Link'
-	}
-}
-
 // `fetch-jsonp` is not supported in Node.js, so this test is skipped.
 describe.skip('loadTwitterLinks', () => {
 	it('should not load Twitter links when there\'re no links', async () => {

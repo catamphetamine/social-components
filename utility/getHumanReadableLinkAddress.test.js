@@ -18,4 +18,11 @@ describe('getHumanReadableLinkAddress', () => {
 			'youtube.org'
 		)
 	})
+
+	it('should return the original URL when there\'s no human-readable form for it', function() {
+		expectToEqual(
+			getHumanReadableLinkAddress('https://www./'),
+			'https://www./'
+		)
+	})
 })

@@ -1,0 +1,16 @@
+{
+	"videoNotFound": "Видео не найдено",
+	"textContent": {
+		"block": {
+			"picture": "Картинка",
+			"video": "Видео",
+			"audio": "Аудиозапись",
+			"attachment": "Вложение"
+		},
+		"inline": {
+			"attachment": "(вложение)",
+			"link": "(ссылка)",
+			"linkTo": "(ссылка на {domain})"
+		}
+	}
+}

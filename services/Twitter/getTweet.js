@@ -18,7 +18,7 @@ let counter = 1
  * so it's much simpler to use. It returns an object of shape:
  * `{ url, html, author_url, author_name }`.
  * @param  {string} id
- * @param  {object} options — `{ messages }`
+ * @param  {object} [options.messages] — Localized labels. See the description of "Messages" in the readme.
  * @return {Promise<object>} [result] `{ url, content, authorName, authorId, authorUrl }`.
  */
 export default function getTweet(id, { messages }) {

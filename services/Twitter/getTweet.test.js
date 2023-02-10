@@ -17,12 +17,20 @@ const NASA_TWEET_PARSED = {
 	}
 }
 
+const messages = {
+	textContent: {
+		inline: {
+			link: '(link)'
+		}
+	}
+}
+
 // `fetch-jsonp` is not supported in Node.js,
 // so this test is skipped.
 describe.skip('getTweet', () => {
 	it('should get tweet by id', async () => {
 		expectToEqual(
-			await getTweet('463440424141459456', { messages: { link: 'link' } }),
+			await getTweet('463440424141459456', { messages }),
 			NASA_TWEET_PARSED
 		)
 	})
@@ -31,7 +39,7 @@ describe.skip('getTweet', () => {
 describe('parseTweet', () => {
 	it('should parse tweet', () => {
 		expectToEqual(
-			parseTweet(NASA_TWEET, { messages: { link: 'link' }, id: NASA_TWEET_PARSED.id }),
+			parseTweet(NASA_TWEET, { messages, id: NASA_TWEET_PARSED.id }),
 			NASA_TWEET_PARSED
 		)
 	})

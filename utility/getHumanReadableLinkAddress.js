@@ -7,6 +7,13 @@
  */
 export default function getHumanReadableLinkAddress(url) {
 	try {
+		// Decode URL characters.
+		//
+		// When a user copies or "shares" a page's URL
+		// in a web browser or in some other application,
+		// it usually gets copied or sent in an "encoded form".
+		// For example, all spaces get replaced by "%20", etc.
+		//
 		url = decodeURI(url)
 	} catch (error) {
 		// Sometimes throws "URIError: URI malformed".
@@ -15,9 +22,16 @@ export default function getHumanReadableLinkAddress(url) {
 			console.error(error)
 		}
 	}
-	return url
+
+	const humanReadableUrl = url
 		// Remove `https://www.` in the beginning.
 		.replace(/^https?:\/\/(www\.)?/, '')
-		// Remove `/` in the end.
+		// Remove `/` at the end.
 		.replace(/\/$/, '')
+
+	if (humanReadableUrl) {
+		return humanReadableUrl
+	}
+
+	return url
 }

@@ -1,4 +1,4 @@
-import { getUrlQueryPart } from '../../utility/url.js'
+import getUrlQueryStringForParameters from '../../utility/getUrlQueryStringForParameters.js'
 
 export default function getVideoUrl(id, options = {}) {
 	const parameters = {
@@ -7,5 +7,5 @@ export default function getVideoUrl(id, options = {}) {
 	if (options.startAt) {
 		parameters.start = options.startAt
 	}
-	return `https://youtube.com/watch${getUrlQueryPart(parameters)}`
+	return `https://youtube.com/watch${getUrlQueryStringForParameters(parameters)}`
 }

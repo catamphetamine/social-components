@@ -1,21 +1,25 @@
 /**
  * Returns a type label for an attachment.
  * @param  {object} attachment
- * @param  {object} [contentTypeLabels] — An object of shape `{ picture: "Picture", video: "Video", ... }`.
+ * @param  {object} [messages] — Localized labels. See the description of "Messages" in the readme.
  * @return {string} [text]
  */
-export default function getAttachmentTypeLabel(attachment, contentTypeLabels) {
+export default function getAttachmentTypeLabel(attachment, messages) {
+	const blockContentTypeLabels = messages && messages.textContent && messages.textContent.block
+	if (!blockContentTypeLabels) {
+		return
+	}
 	switch (attachment.type) {
 		case 'picture':
-			return contentTypeLabels.picture
+			return blockContentTypeLabels.picture
 		case 'video':
-			return contentTypeLabels.video
+			return blockContentTypeLabels.video
 		case 'audio':
-			return contentTypeLabels.audio
+			return blockContentTypeLabels.audio
 		case 'social':
 			if (attachment.social.attachments) {
 				for (const attachment of attachment.social.attachments) {
-					const label = getAttachmentTypeLabel(attachment, contentTypeLabels)
+					const label = getAttachmentTypeLabel(attachment, blockContentTypeLabels)
 					if (label) {
 						return label
 					}
@@ -24,6 +28,6 @@ export default function getAttachmentTypeLabel(attachment, contentTypeLabels) {
 			// `provider` is supposed to always be defined.
 			return attachment.social.provider
 		default:
-			return contentTypeLabels.attachment
+			return blockContentTypeLabels.attachment
 	}
 }

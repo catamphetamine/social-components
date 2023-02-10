@@ -1,4 +1,4 @@
-import { getUrlQueryPart } from '../../utility/url.js'
+import getUrlQueryStringForParameters from '../../utility/getUrlQueryStringForParameters.js'
 
 export default function getEmbeddedVideoUrl(id, options = {}) {
 	const parameters = {}
@@ -11,5 +11,5 @@ export default function getEmbeddedVideoUrl(id, options = {}) {
 	if (options.loop) {
 		parameters.loop = 1
 	}
-	return `https://player.vimeo.com/video/${id}${getUrlQueryPart(parameters)}`
+	return `https://player.vimeo.com/video/${id}${getUrlQueryStringForParameters(parameters)}`
 }

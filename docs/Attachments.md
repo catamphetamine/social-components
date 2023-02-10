@@ -6,10 +6,10 @@ See [`Content Types`](https://gitlab.com/catamphetamine/social-components/tree/m
 
 ```js
 {
-	type: "picture",
-	spoiler: boolean?,
-	// (see "Picture" section for more details)
-	picture: Picture
+  type: "picture",
+  spoiler: boolean?,
+  // (see "Picture" section for more details)
+  picture: Picture
 }
 ```
 
@@ -21,10 +21,10 @@ See [`Content Types`](https://gitlab.com/catamphetamine/social-components/tree/m
 
 ```js
 {
-	type: "video",
-	spoiler: boolean?,
-	// (see "Video" section for more details)
-	video: Video
+  type: "video",
+  spoiler: boolean?,
+  // (see "Video" section for more details)
+  video: Video
 }
 ```
 
@@ -36,8 +36,8 @@ See [`Content Types`](https://gitlab.com/catamphetamine/social-components/tree/m
 
 ```js
 {
-	type: "audio",
-	audio: Audio
+  type: "audio",
+  audio: Audio
 }
 ```
 
@@ -47,8 +47,8 @@ See [`Content Types`](https://gitlab.com/catamphetamine/social-components/tree/m
 
 ```js
 {
-	type: "file",
-	file: File
+  type: "file",
+  file: File
 }
 ```
 
@@ -60,8 +60,8 @@ Embedded tweets, etc.
 
 ```js
 {
-	type: "social",
-	social: Social
+  type: "social",
+  social: Social
 }
 ```
 

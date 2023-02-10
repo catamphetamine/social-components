@@ -3,8 +3,12 @@ import getSocialText from './getSocialText.js'
 import expectToEqual from '../expectToEqual.js'
 
 const messages = {
-	picture: 'Picture',
-	video: 'Video'
+	textContent: {
+		block: {
+			picture: 'Picture',
+			video: 'Video'
+		}
+	}
 }
 
 describe('getSocialText', () => {

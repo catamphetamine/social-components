@@ -4,20 +4,27 @@ import getAttachmentTextWithoutSocial from '../attachment/getAttachmentTextWitho
 import getAttachmentTypeLabel from '../attachment/getAttachmentTypeLabel.js'
 
 // These may be passed as `options`.
-const LEFT_QUOTE = '«'
-const RIGHT_QUOTE = '»'
+const SOCIAL_AUTHOR_AND_CONTENT_TEXT = '{author}: {content}'
+const SOCIAL_AUTHOR_NAME_AND_ID_TEXT = '{name} (@{id})'
+const SOCIAL_AUTHOR_ID_TEXT = '@{id}'
+const SOCIAL_CONTENT_TEXT = '«{content}»'
 
 /**
  * Generates a text-only representation of a `social`.
  * @param  {object} social
- * @param  {object} [contentTypeLabels] — An object of shape `{ picture: "Picture", video: "Video", ... }`.
+ * @param  {object} [messages] — Localized labels. See the description of "Messages" in the readme.
  * @return {string}
  */
-export default function getSocialText(social, contentTypeLabels) {
+export default function getSocialText(social, messages) {
 	const author = getSocialAuthorText(social)
-	const content = getSocialContentText(social, contentTypeLabels)
+	let content = getSocialContentText(social)
+	if (!content) {
+		content = getSocialAttachmentsText(social, messages)
+	}
 	if (content) {
-		return `${author}: ${content}`
+		return SOCIAL_AUTHOR_AND_CONTENT_TEXT
+			.replace('{author}', author)
+			.replace('{content}', content)
 	}
 	// `author` is supposed to always be present.
 	return author
@@ -26,19 +33,25 @@ export default function getSocialText(social, contentTypeLabels) {
 function getSocialAuthorText(social) {
 	if (social.author.name) {
 		if (social.author.id) {
-			return `${social.author.name} (@${social.author.id})`
+			return SOCIAL_AUTHOR_NAME_AND_ID_TEXT
+				.replace('{name}', social.author.name)
+				.replace('{id}', social.author.id)
 		} else {
 			return social.author.name
 		}
 	} else {
-		return `@${social.author.id}`
+		return SOCIAL_AUTHOR_ID_TEXT
+			.replace('{id}', social.author.id)
 	}
 }
 
-function getSocialContentText(social, contentTypeLabels) {
+function getSocialContentText(social) {
 	if (social.content) {
-		return `${LEFT_QUOTE}${social.content}${RIGHT_QUOTE}`
+		return SOCIAL_CONTENT_TEXT.replace('{content}', social.content)
 	}
+}
+
+function getSocialAttachmentsText(social, messages) {
 	if (social.attachments) {
 		for (const attachment of social.attachments) {
 			const text = getAttachmentTextWithoutSocial(attachment)
@@ -46,9 +59,9 @@ function getSocialContentText(social, contentTypeLabels) {
 				return text
 			}
 		}
-		if (contentTypeLabels) {
+		if (messages) {
 			for (const attachment of social.attachments) {
-				const label = getAttachmentTypeLabel(attachment, contentTypeLabels)
+				const label = getAttachmentTypeLabel(attachment, messages)
 				if (label) {
 					return label
 				}

@@ -15,8 +15,9 @@ export default function trimContent(content, options = {}) {
 	let i = 0
 	while (i < content.length) {
 		const block = content[i]
-		// A content block is not neccessarily a paragraph.
-		// For example, it could be an embedded video object.
+		// A top-level content block is not neccessarily a paragraph of text.
+		// It could also be an embedded video or an embedded picture, for example.
+		// A paragraph of text is always an array.
 		if (Array.isArray(block)) {
 			trimInlineContent(block, options)
 			if (block.length === 0) {

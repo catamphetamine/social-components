@@ -1,8 +1,10 @@
 import generatePostQuote, { canGeneratePostQuoteIgnoringNestedPostQuotes } from './generatePostQuote.js'
 
 const messages = {
-	contentType: {
-		picture: 'Picture'
+	textContent: {
+		block: {
+			picture: 'Picture'
+		}
 	}
 }
 

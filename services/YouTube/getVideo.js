@@ -1,4 +1,3 @@
-import { parseQueryString } from '../../utility/url.js'
 import getImageSize from '../../utility/image/getImageSize.js'
 
 // Returns a `Promise`.

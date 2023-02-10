@@ -38,7 +38,8 @@ export default function createLink(url, content) {
 	return {
 		type: 'link',
 		url,
-		content: getHumanReadableLinkAddress(url) || url,
+		content: getHumanReadableLinkAddress(url),
+		contentGeneratedIsUrl
 		contentGenerated: true
 	}
 }
