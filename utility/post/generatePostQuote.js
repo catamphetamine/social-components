@@ -2,13 +2,13 @@ import getPostText from './getPostText.js'
 import getEmbeddedAttachment from './getEmbeddedAttachment.js'
 import trimText, { MAX_FIT_FACTOR } from './trimText.js'
 
-const NEW_LINE_CHARACTER_LENGTH = 15
+const CHARACTERS_COUNT_PENALTY_FOR_LINE_BREAK = 15
 
 /**
  * Returns post text: first tries without post quotes, then tries with post quotes (unless `skipPostQuoteBlocks: true` option is passed).
  * @param  {object} post
  * @param  {number} options.maxLength — See `maxLength` argument of `trimText()`.
- * @param  {number} [options.newLineCharacterLength] — Can be set to specify custom character length for a "new line" (`\n`) character. It could be used to "tax" multi-line texts when trimming. Is `0` by default.
+ * @param  {function} [options.getCharactersCountPenaltyForLineBreak] — Returns characters count equivalent for a "line break" (`\n`) character. The idea is to "tax" multi-line texts when trimming by characters count. By default, having `\n` characters in text is not penalized in any way and those characters aren't counted.
  * @param  {number} [options.minFitFactor] — See `minFitFactor` option of `trimText()`.
  * @param  {number} [options.maxFitFactor] — See `maxFitFactor` option of `trimText()`.
  * @param  {string} [options.trimMarkEndOfLine] — "Trim mark" when trimming at the end of a line. Is " …" by default. See `trimMarkEndOfLine` option of `trimText()`.
@@ -31,7 +31,7 @@ export default function generatePostQuote(post, _options) {
 		maxFitFactor,
 		skipPostQuoteBlocks,
 		onUntitledAttachment,
-		newLineCharacterLength,
+		getCharactersCountPenaltyForLineBreak,
 		trimMarkEndOfLine,
 		trimMarkEndOfSentence,
 		trimMarkEndOfWord,
@@ -126,7 +126,7 @@ export default function generatePostQuote(post, _options) {
 			text,
 			maxLength,
 			{
-				newLineCharacterLength: newLineCharacterLength === undefined ? NEW_LINE_CHARACTER_LENGTH : newLineCharacterLength,
+				getCharactersCountPenaltyForLineBreak: getCharactersCountPenaltyForLineBreak || (() => CHARACTERS_COUNT_PENALTY_FOR_LINE_BREAK),
 				minFitFactor,
 				maxFitFactor,
 				trimMarkEndOfLine,

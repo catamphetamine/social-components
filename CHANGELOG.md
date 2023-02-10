@@ -1,3 +1,8 @@
+0.3.4 / 10.02.2023
+==================
+
+* Renamed `newLineCharacterLength` parameter to `getCharactersCountPenaltyForLineBreak()`.
+
 0.3.0 / 10.02.2023
 ===================
 

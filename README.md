@@ -88,7 +88,7 @@ Availble `options`:
 * `maxLength: number` — A limit on the resulting text length.
 * `minFitFactor: number?` — Provides some flexibility on `maxLength`. See `minFitFactor` option of `trimText()`.
 * `minFitFactor: number?` — Provides some flexibility on `maxLength`. See `maxFitFactor` option of `trimText()`.
-* `newLineCharacterLength: number?` — See `newLineCharacterLength` option of `trimText()`.
+* `getCharactersCountPenaltyForLineBreak?: ({ textBefore: string }) => number` — See `getCharactersCountPenaltyForLineBreak` option of `trimText()`.
 * `trimMarkEndOfLine: string?` — See `trimMarkEndOfLine` option of `trimText()`.
 * `trimMarkEndOfSentence: string?` — See `trimMarkEndOfSentence` option of `trimText()`.
 * `trimMarkEndOfWord: string?` — See `trimMarkEndOfWord` option of `trimText()`.
@@ -123,7 +123,7 @@ Available `options`:
 
 * `minFitFactor: number?` — Provides some flexibility on `maxLength`. Sets the lower limit of text trimming length at `minFitFactor * maxLength`: if text length surpasses `maxFitFactor * maxLength` limit, then it can be trimmed anywhere between `minFitFactor * maxLength` and `maxFitFactor * maxLength`. Is `1` by default, meaning "no effect".
 * `minFitFactor: number?` — Provides some flexibility on `maxLength`. Sets the upper limit of text trimming length at `maxFitFactor * maxLength`: if text length surpasses `maxFitFactor * maxLength` limit, then it can be trimmed anywhere between `minFitFactor * maxLength` and `maxFitFactor * maxLength`. Is `1` by default, meaning "no effect".
-* `newLineCharacterLength: number?` — Can be set to specify custom character length for a "new line" (`\n`) character. It could be used to "tax" multi-line texts when trimming. Is `0` by default.
+* `getCharactersCountPenaltyForLineBreak?: ({ textBefore: string }) => number` — Returns characters count equivalent for a "line break" (`\n`) character. The idea is to "tax" multi-line texts when trimming by characters count. By default, having `\n` characters in text is not penalized in any way and those characters aren't counted.
 * `trimPoint: string?` — Preferrable trim point. Can be `undefined` (default), `"sentence-end"`, `"sentence-or-word-end"`.Preferrable trim point. By default it starts with seeing if it can trim at `"sentence-end"`, then tries to trim at `"sentence-or-word-end"`, and then just trims at any point.
 * `trimMarkEndOfLine: string?` — "Trim mark" when trimming at the end of a line. Is "" (no trim mark) by default.
 * `trimMarkEndOfSentence: string?` — "Trim mark" when trimming at the end of a sentence. Is "" (no trim mark) by default.

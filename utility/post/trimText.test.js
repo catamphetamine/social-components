@@ -17,7 +17,7 @@ function test(input, maxLength, output, options) {
 describe('trimText', () => {
 	it('should support maxLength = 0', () => {
 		test('Abc', 0, '…')
-		test('Abc', 0, '…', { newLineCharacterLength: 30 })
+		test('Abc', 0, '…', { getCharactersCountPenaltyForLineBreak: () => 30 })
 	})
 
 	it('should trim text', () => {
@@ -95,40 +95,40 @@ describe('trimText', () => {
 			'Abc\nDef'
 		)
 		expectToEqual(
-			trimText('Abc\nDef', 10, { newLineCharacterLength: 30 }),
+			trimText('Abc\nDef', 10, { getCharactersCountPenaltyForLineBreak: () => 30 }),
 			'Abc'
 		)
 		// Everything fits.
 		expectToEqual(
-			trimText('Abc\nDefDefDefDef', 45, { newLineCharacterLength: 30 }),
+			trimText('Abc\nDefDefDefDef', 45, { getCharactersCountPenaltyForLineBreak: () => 30 }),
 			'Abc\nDefDefDefDef'
 		)
 		// Test fit factors.
 		// Everything fits with fit factor.
 		expectToEqual(
-			trimText('Abc\nDefDefDefDef', 3 + 30 + 12, { newLineCharacterLength: 30, minFitFactor: 0.8 }),
+			trimText('Abc\nDefDefDefDef', 3 + 30 + 12, { getCharactersCountPenaltyForLineBreak: () => 30, minFitFactor: 0.8 }),
 			'Abc\nDefDefDefDef'
 		)
 		// The last line doesn't fit but is not omitted.
 		expectToEqual(
-			trimText('Abc\nDefDefDefDef', 3 + 30 + 4, { newLineCharacterLength: 30, minFitFactor: 0.8 }),
+			trimText('Abc\nDefDefDefDef', 3 + 30 + 4, { getCharactersCountPenaltyForLineBreak: () => 30, minFitFactor: 0.8 }),
 			'Abc\nDefD…'
 		)
 		// The last line doesn't fit at all.
 		expectToEqual(
-			trimText('Abc\nDefDefDefDef', 10, { newLineCharacterLength: 30, minFitFactor: 0.8 }),
+			trimText('Abc\nDefDefDefDef', 10, { getCharactersCountPenaltyForLineBreak: () => 30, minFitFactor: 0.8 }),
 			'Abc'
 		)
 		// When the last line being trimmed doesn't result in
 		// relatively much text then it's omitted.
 		expectToEqual(
-			trimText('AbcAbcAbcAbcAbcAbc\nDefDefDefDefDef', 51, { newLineCharacterLength: 30, minFitFactor: 0.8 }),
+			trimText('AbcAbcAbcAbcAbcAbc\nDefDefDefDefDef', 51, { getCharactersCountPenaltyForLineBreak: () => 30, minFitFactor: 0.8 }),
 			'AbcAbcAbcAbcAbcAbc'
 		)
 		// When the last line being trimmed does result in
 		// relatively enough text then it's not omitted.
 		expectToEqual(
-			trimText('AbcAbcAbcAbcAbcAbc\nDefDefDefDefDef', 51, { newLineCharacterLength: 30, minFitFactor: 0.95 }),
+			trimText('AbcAbcAbcAbcAbcAbc\nDefDefDefDefDef', 51, { getCharactersCountPenaltyForLineBreak: () => 30, minFitFactor: 0.95 }),
 			'AbcAbcAbcAbcAbcAbc\nDef…'
 		)
 	})

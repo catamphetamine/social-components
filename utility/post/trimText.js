@@ -17,7 +17,7 @@ const DEFAULT_TRIM_MARK_ABRUPT = '…'
  * trims as-is otherwise (appending an ellipsis).
  * @param  {string} string
  * @param  {number} maxLength
- * @param  {number} [options.newLineCharacterLength] — Can be set to specify custom character length for a "new line" (`\n`) character. It could be used to "tax" multi-line texts when trimming. Is `0` by default.
+ * @param  {function} [options.getCharactersCountPenaltyForLineBreak] — Returns characters count equivalent for a "line break" (`\n`) character. The idea is to "tax" multi-line texts when trimming by characters count. By default, having `\n` characters in text is not penalized in any way and those characters aren't counted.
  * @param  {number} [options.minFitFactor] — How much flexible is `maxLength`. Example: `1.35` means `maxLength` could be `1.35 * maxLength`.
  * @param  {number} [options.maxFitFactor] — How much flexible is `minLength`. Example: `0.75` means `minLength` could be `0.75 * maxLength`.
  * @param  {string} [options.trimPoint] — Preferrable trim point. Can be `undefined` (default), "sentence-end", "sentence-or-word-end". By default it starts with seeing if it can trim at "sentence-end", then tries to trim at "sentence-or-word-end", and then just trims at any point.
@@ -31,7 +31,7 @@ export default function trimText(string, maxLength, options = {}) {
 	// Initialize options.
 	const {
 		trimPoint,
-		newLineCharacterLength
+		getCharactersCountPenaltyForLineBreak
 	} = options
 	let {
 		minFitFactor,
@@ -60,7 +60,7 @@ export default function trimText(string, maxLength, options = {}) {
 		trimMarkAbrupt = DEFAULT_TRIM_MARK_ABRUPT
 	}
 	// Trim while not handling "new lines" in a special way.
-	if (!newLineCharacterLength) {
+	if (!getCharactersCountPenaltyForLineBreak) {
 		return _trimText(string, maxLength, trimPoint, minFitFactor, maxFitFactor, trimMarkEndOfLine, trimMarkEndOfSentence, trimMarkEndOfWord, trimMarkAbrupt)
 	}
 	// Edge case.
@@ -73,11 +73,10 @@ export default function trimText(string, maxLength, options = {}) {
 	const lines = string.split('\n').filter(_ => _)
 	string = ''
 	let characters = 0
-	let pointsLeft = newLineCharacterLength + maxLength
+	let pointsLeft = maxLength
 	let i = 0
 	while (i < lines.length) {
 		let line = lines[i]
-		pointsLeft -= newLineCharacterLength
 		if (line.length > pointsLeft) {
 			// Using `(characters + pointsLeft)` instead of `maxLength` here
 			// because `(characters + pointsLeft)` doesn't count new lines
@@ -120,7 +119,7 @@ export default function trimText(string, maxLength, options = {}) {
 		}
 		string += line
 		characters += line.length
-		pointsLeft -= line.length
+		pointsLeft -= line.length + getCharactersCountPenaltyForLineBreak({ textBefore: line })
 		i++
 	}
 	return string
