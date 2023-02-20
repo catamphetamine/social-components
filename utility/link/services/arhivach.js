@@ -3,6 +3,7 @@ export default {
 	services: [{
 		domains: [
 			'archivach.org',
+			'arhivach.top',
 			'arhivach.cf',
 			'arhivach.ng'
 		],
