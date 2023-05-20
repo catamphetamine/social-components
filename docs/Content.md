@@ -228,7 +228,7 @@ A "Read more" button that is placed in the same paragraph as the trimmed text. I
 
 ## Block elements
 
-### Subheading
+### Heading
 
 ```js
 {
@@ -273,7 +273,7 @@ A "Read more" button that is placed in the same paragraph as the trimmed text. I
 
 ### Attachment
 
-[Attachments](https://gitlab.com/catamphetamine/social-components/tree/master/docs/Attachments.md) can be embedded in a post.
+[Attachments](https://gitlab.com/catamphetamine/social-components/tree/master/docs/Attachment.md) can be embedded in a post.
 
 An attachment can be embedded either by its `id` or directly:
 

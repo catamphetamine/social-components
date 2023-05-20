@@ -1,4 +1,4 @@
-# Content types
+# ContentType
 
 Content can not just be in textual form, it can also be a picture, a video, an audio, a social media post.
 

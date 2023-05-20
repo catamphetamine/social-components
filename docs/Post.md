@@ -11,5 +11,5 @@ A `Post` object has properties:
   * [`picture?: Picture`](https://gitlab.com/catamphetamine/social-components/tree/master/docs/ContentTypes.md#picture)
 * `createdAt?: Date`
 * [`content?: Content`](https://gitlab.com/catamphetamine/social-components/tree/master/docs/Content.md)
-* [`attachments?: Attachment[]`](https://gitlab.com/catamphetamine/social-components/tree/master/docs/Attachments.md).
+* [`attachments?: Attachment[]`](https://gitlab.com/catamphetamine/social-components/tree/master/docs/Attachment.md).
 * `replies?: Post[]`

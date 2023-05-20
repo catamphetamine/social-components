@@ -436,10 +436,10 @@ The `postLinkTest` argument should be the condition for removing a post link: ei
 ```js
 import removeLeadingPostLink from 'social-components/utility/post/removeLeadingPostLink.js'
 
-comment.replies = comment.replies.map((reply) => {
-	return removeLeadingPostLink(reply, comment.id)
+post.replies = post.replies.map((replyPost) => {
+	return removeLeadingPostLink(replyPost, post.id)
 	// Or, the same:
-	// return removeLeadingPostLink(reply, (postLink) => postLink.postId === comment.id)
+	// return removeLeadingPostLink(replyPost, (postLink) => postLink.postId === post.id)
 })
 ```
 
