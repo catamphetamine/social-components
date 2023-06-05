@@ -201,7 +201,11 @@ Videos can be video files or videos provided by some service like YouTube. Video
   // `title` is optional.
   // (for example, anonymous messengers might remove
   //  the original audio file name for privacy reasons).
-  title: string?
+  title: string?,
+
+  // Audio thumbnail (album cover).
+  // (see "Picture" section for more details)
+  picture: Picture?
 }
 ```
 
