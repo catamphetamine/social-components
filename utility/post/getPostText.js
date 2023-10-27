@@ -271,12 +271,20 @@ function countOccurrences(string, character) {
 function getLinkTitleDefault(link, { messages }) {
 	if (messages && messages.textContent && messages.textContent.inline) {
 		const inlineContentTypeLabels = messages.textContent.inline
-		const { domain, path } = parseUrl(link.url)
-		if (domain) {
-			if (inlineContentTypeLabels.linkTo) {
-				return inlineContentTypeLabels.linkTo
-					.replace('{domain}', domain)
-					.replace('{path}', path === '/' ? '' : path)
+		const result = parseUrl(link.url)
+		if (result) {
+			const {
+				// `domain` can be `undefined`.
+				domain,
+				// `path` is always a non-empty string.
+				path
+			} = result
+			if (domain) {
+				if (inlineContentTypeLabels.linkTo) {
+					return inlineContentTypeLabels.linkTo
+						.replace('{domain}', domain)
+						.replace('{path}', path === '/' ? '' : path)
+				}
 			}
 		}
 	}
