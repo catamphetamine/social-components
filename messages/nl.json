@@ -1,0 +1,16 @@
+{
+	"videoNotFound": "Video niet gevonden",
+	"textContent": {
+		"block": {
+			"picture": "Afbeelding",
+			"video": "Video",
+			"audio": "Audio",
+			"attachment": "Bijlage"
+		},
+		"inline": {
+			"attachment": "(bijlage)",
+			"link": "(link)",
+			"linkTo": "(link naar {domain})"
+		}
+	}
+}
