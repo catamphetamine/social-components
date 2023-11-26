@@ -1,6 +1,12 @@
 # Attachment
 
-See [`ContentType`](https://gitlab.com/catamphetamine/social-components/tree/master/docs/ContentType.md) for more details.
+An `Attachment` object represents something that could be "attached" to a message.
+
+An `Attachment` object has a `type: string` property that defines the content type of the attachment. See [`ContentType`](https://gitlab.com/catamphetamine/social-components/tree/master/docs/ContentType.md) for the description of each content type, if required.
+
+All other properties of an `Attachment` object are different for each different type of an attachment.
+
+Listed below are the possible types of an `Attachment` object.
 
 ## Picture
 
