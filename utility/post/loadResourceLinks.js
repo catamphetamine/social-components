@@ -30,10 +30,24 @@ export default function loadResourceLinks_(post, {
 	messages,
 	onContentChange,
 	contentMaxLength,
+	// An optional list of `Promises`, each `Promise` resolving to a `boolean`.
+	additionalResourceLoadingPromises,
+	// `loadResources` is a legacy parameter. Use `additionalResourceLoadingPromises` parameter instead.
 	loadResources,
 	minimizeGeneratedPostLinkBlockQuotes,
 	// sync
 }) {
+	// If there're no loadable links then return.
+	const hasAnyLoadableLinks = visitPostParts('link', link => isLoadableLink(link, RESOURCES))
+
+	// Clone `post.content` because it might potentially (or even likely) be changed
+	// after loading any resource link.
+	// It could behave a bit "smarter", only cloning `post.content` if some resource link
+	// has actually been loaded, but resource loader first finds resource links in `post.content`
+	// and only after that it attempts to load them, so it already has the reference to the
+	// content part inside the uncloned `post.content`.
+	const originalContent = cloneDeep(post.content)
+
 	// Could also clone the post so that the original `post`
 	// is only changed after the updated post has rendered.
 	// This was previously used for `virtual-scroller` consistency:
@@ -69,6 +83,9 @@ export default function loadResourceLinks_(post, {
 	// 	}
 	// 	to.attachments = from.attachments
 	// }
+
+	// This function gets called whenever a resource link has been loaded
+	// and an `.attachment` property has been added on that link (content part).
 	const onPostLinkAttachmentLoaded = () => {
 		// const postWithResourceLinksLoadedBeforeItHasRendered = clonePost(postBeingMutated)
 		// "Expand" the link with the `.attachment` (`{ type: 'link', attachment: ... }`)
@@ -100,14 +117,14 @@ export default function loadResourceLinks_(post, {
 	}
 
 	let cancelled
-	function onResult(foundSomething) {
+	function onSomeResourceLinkProcessed(hasResourceBeenLoaded) {
 		if (cancelled) {
 			return
 		}
-		if (foundSomething) {
+		if (hasResourceBeenLoaded) {
 			// A resource link has been found and has been loaded:
-			// the `post` object has been changed by adding an `.attachment`
-			// object to the link.
+			// the `post.content` object has been changed by adding an
+			// `.attachment` object to the link inside `post.content`.
 			onPostLinkAttachmentLoaded()
 		}
 	}
@@ -122,20 +139,40 @@ export default function loadResourceLinks_(post, {
 	]
 
 	// if (sync) {
-	// 	return onResult(results.findIndex(_ => _) >= 0)
+	// 	return onSomeResourceLinkProcessed(results.findIndex(_ => _) >= 0)
 	// }
 
 	// This is a point of customization to add some other custom resource loaders.
 	// Is used in `captchan` to fix `lynxchan` post attachment sizes and URLs.
 	if (loadResources) {
-		results = results.concat(loadResources())
+		additionalResourceLoadingPromises = loadResources()
+	}
+	if (additionalResourceLoadingPromises) {
+		results = results.concat(additionalResourceLoadingPromises)
 	}
 
 	return {
-		promise: resolvePromises(results, onResult),
+		promise: resolvePromises(results, onSomeResourceLinkProcessed),
+
 		// Calling `.cancel()` prevents the `loadResourceLinks()` function
 		// from making any further changes to the `post` object.
-		cancel: () => cancelled = true
+		cancel: () => {
+			cancelled = true
+
+			// Revert `post.content` to its original unmodified state.
+			// The reason is that if some resource link has been loaded,
+			// an `.attachment` property has been set on the link object
+			// and it will be ignored if `loadResourceLinks()` gets called
+			// a second time on `post.content`.
+			// Calling `loadResourceLinks()` a second time happens with React
+			// in development mode: it runs all "effect" hooks twice at initial mount.
+			post.content = originalContent
+
+			// Re-render the post because `post.content` has been reverted.
+			if (onContentChange) {
+				onContentChange()
+			}
+		}
 	}
 }
 
@@ -199,15 +236,10 @@ export function loadResourceLinks(content, Resources, options) {
 					return Promise.resolve(result)
 				}
 			}
-			// If the resource has already been loaded then skip.
-			if (link.attachment || link.notFound) {
-				return resultOrPromise()
+			if (!isLoadableLink(link, Resources)) {
+				return resultOrPromise(false)
 			}
 			const Resource = Resources[link.service]
-			// If it's a link to a non-supported service then skip.
-			if (!Resource) {
-				return resultOrPromise()
-			}
 			return resultOrPromise(loadResourceLink(link, Resource, options))
 		},
 		content
@@ -239,7 +271,7 @@ function loadResourceLink(link, Resource, options) {
 	const { url, service } = link
 	const descriptor = Resource.parseUrl(url)
 	if (!descriptor) {
-		return
+		return false
 	}
 	const id = Resource.getId(descriptor)
 	const { cache } = options
@@ -283,6 +315,17 @@ function onResourceLinkLoaded(link, resource, Resource, options) {
 		}
 		return true
 	}
+}
+
+function isLoadableLink(link, Resources) {
+	// If the resource has already been loaded then skip.
+	if (link.attachment || link.notFound) {
+		return false
+	}
+	// If it's a link to a non-supported service then skip.
+	// Otherwise, the link is loadable.
+	const Resource = link.service && Resources[link.service]
+	return Boolean(Resource)
 }
 
 export const RESOURCES = {
