@@ -1,17 +1,21 @@
 import expectToEqual from '../expectToEqual.js'
 
-import { loadResourceLinks } from './loadResourceLinks.js'
+import { loadResourceLinks_ } from './loadResourceLinks.js'
 import YouTubeResource from './YouTubeResource.js'
 
 function loadYouTubeLinks(content, options = {}) {
-	return loadResourceLinks(content, { youtube: YouTubeResource }, options)
+	return loadResourceLinks_(content, { youtube: YouTubeResource }, {
+		...options,
+		hasBeenStopped: () => false,
+		addUndoOperation: () => {}
+	})
 }
 
 describe('loadYouTubeLinks', () => {
 	it('should not load YouTube links when there\'re no links', async () => {
 		expectToEqual(
-			await loadYouTubeLinks(undefined),
-			false
+			loadYouTubeLinks(undefined),
+			[]
 		)
 		const content = [
 			[
@@ -19,8 +23,8 @@ describe('loadYouTubeLinks', () => {
 			]
 		]
 		expectToEqual(
-			await loadYouTubeLinks(content),
-			false
+			loadYouTubeLinks(content),
+			[]
 		)
 		expectToEqual(
 			content,
@@ -46,10 +50,15 @@ describe('loadYouTubeLinks', () => {
 				' def'
 			]
 		]
-		expectToEqual(
-			await loadYouTubeLinks(content),
-			true
-		)
+
+		const loadYouTubeLinksResult = loadYouTubeLinks(content)
+		expectToEqual(Array.isArray(loadYouTubeLinksResult), true)
+		expectToEqual(loadYouTubeLinksResult.length, 1)
+		expectToEqual(await loadYouTubeLinksResult[0], {
+			loadable: true,
+			loaded: true
+		})
+
 		expectToEqual(
 			content,
 			[

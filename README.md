@@ -200,7 +200,11 @@ import loadResourceLinks from 'social-components/utility/post/loadResourceLinks.
 
 Loads "resource" links (such as links to YouTube and Twitter) by loading the info associated with the resources. For example, sets video `.attachment` on YouTube links and sets "social" `.attachment` on Twitter links.
 
-Returns an object having a `cancel()` function and a `promise` property. Calling `stop()` function prevents `loadResourceLinks()` from making any further changes to the `post` object. Calling `cancel()` function multiple times or after the `promise` has finished doesn't have any effect. The `promise` is a `Promise` that resolves when all resource links have been loaded. Loading some links may potentially error (for example, if a YouTube video wasn't found). Even if the returned `Promise` errors due to some resource loader, the post content still may have been changed by other resource loaders.
+Returns an object having properties:
+
+* `promise: Promise` — a `Promise` that resolves when all resource links have finished loading. "Finished loading" here means "all resources have been attempted to be loaded" rather than "all resources have been loaded successfully", i.e. it resolves even if some (or all) resources couldn't be loaded (for example, if a YouTube link points to a video that no longer exists).
+* `stop()` — Calling `stop()` function prevents `loadResourceLinks()` from making any further changes to the `post` object. Calling `stop()` function multiple times or after the `promise` has finished doesn't have any effect.
+* `cancel()` — Calling `cancel()` function stops `loadResourceLinks()` and reverts any changes that have been made to the `post` object. If the `loadResourceLinks()` function has already finished then any changes to the `post` object will be reverted anyway. Calling `cancel()` function multiple times doesn't have any effect.
 
 Available `options`:
 

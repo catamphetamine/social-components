@@ -1,18 +1,22 @@
 import expectToEqual from '../expectToEqual.js'
 
-import { loadResourceLinks } from './loadResourceLinks.js'
+import { loadResourceLinks_ } from './loadResourceLinks.js'
 import TwitterResource from './TwitterResource.js'
 
 function loadTwitterLinks(content, options = {}) {
-	return loadResourceLinks(content, { twitter: TwitterResource }, options)
+	return loadResourceLinks_(content, { twitter: TwitterResource }, {
+		...options,
+		hasBeenStopped: () => false,
+		addUndoOperation: () => {}
+	})
 }
 
 // `fetch-jsonp` is not supported in Node.js, so this test is skipped.
 describe.skip('loadTwitterLinks', () => {
 	it('should not load Twitter links when there\'re no links', async () => {
 		expectToEqual(
-			await loadTwitterLinks(undefined),
-			false
+			loadTwitterLinks(undefined),
+			[]
 		)
 		const content = [
 			[
@@ -20,8 +24,8 @@ describe.skip('loadTwitterLinks', () => {
 			]
 		]
 		expectToEqual(
-			await loadTwitterLinks(content),
-			false
+			loadTwitterLinks(content),
+			[]
 		)
 		expectToEqual(
 			content,
@@ -32,7 +36,6 @@ describe.skip('loadTwitterLinks', () => {
 			]
 		)
 	})
-
 
 	it('should load Twitter links', async () => {
 		const content = [
@@ -47,10 +50,15 @@ describe.skip('loadTwitterLinks', () => {
 				' def'
 			]
 		]
-		expectToEqual(
-			await loadTwitterLinks(content, { messages }),
-			true
-		)
+
+		const loadTwitterLinksResult = loadTwitterLinks(content, { messages })
+		expectToEqual(Array.isArray(loadTwitterLinksResult), true)
+		expectToEqual(loadTwitterLinksResult.length, 1)
+		expectToEqual(await loadTwitterLinksResult[0], {
+			loadable: true,
+			loaded: true
+		})
+
 		expectToEqual(
 			content,
 			[

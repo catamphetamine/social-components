@@ -1,9 +1,9 @@
-import cloneDeep from 'lodash/cloneDeep.js'
+// import cloneDeep from 'lodash/cloneDeep.js'
 
 import YouTubeResource from './YouTubeResource.js'
 import TwitterResource from './TwitterResource.js'
-import visitPostParts from './visitPostParts.js'
 
+import visitPostParts from './visitPostParts.js'
 import expandStandaloneAttachmentLinks from './expandStandaloneAttachmentLinks.js'
 import generatePostPreview from './generatePostPreview.js'
 
@@ -22,9 +22,9 @@ import resolvePromises from '../resolvePromises.js'
  * @param  {number} [options.contentMaxLength] — If set, will re-generate `.contentPreview` if the updated `content` exceeds the limit (in "points").
  * @param  {object} [options.messages] — Localized labels for resource loading. See [Messages](#messages).
  * @param  {boolean} [options.minimizeGeneratedPostLinkBlockQuotes] — See the description of the same option of `generatePostPreview()`.
- * @return {object} Returns an object having a `cancel()` function and a `promise` property. Calling `stop()` function prevents `loadResourceLinks()` from making any further changes to the `post` object. Calling `cancel()` function multiple times or after the `promise` has finished doesn't have any effect. The `promise` is a `Promise` that resolves when all resource links have been loaded. Loading some links may potentially error (for example, if a YouTube video wasn't found). Even if the returned `Promise` errors due to some resource loader, the post content still may have been changed by other resource loaders.
+ * @return {object} Returns an object having properties: `stop()`, `cancel()` and a `promise` that resolves to `undefined`. Calling `stop()` function prevents `loadResourceLinks()` from making any further changes to the `post` object. Calling `stop()` function multiple times or after the `promise` has finished doesn't have any effect. Calling `cancel()` function stops `loadResourceLinks()` function and reverts any changes to the `post` object. The `promise` is a `Promise` that resolves to `undefined` when all resource links have been loaded (not necessarily "successfully"). Loading some links may potentially error (for example, if a YouTube video wasn't found).
  */
-export default function loadResourceLinks_(post, {
+export default function loadResourceLinks(post, {
 	cache,
 	youTubeApiKey,
 	messages,
@@ -40,13 +40,34 @@ export default function loadResourceLinks_(post, {
 	// If there're no loadable links then return.
 	const hasAnyLoadableLinks = visitPostParts('link', link => isLoadableLink(link, RESOURCES))
 
-	// Clone `post.content` because it might potentially (or even likely) be changed
-	// after loading any resource link.
-	// It could behave a bit "smarter", only cloning `post.content` if some resource link
-	// has actually been loaded, but resource loader first finds resource links in `post.content`
-	// and only after that it attempts to load them, so it already has the reference to the
-	// content part inside the uncloned `post.content`.
-	const originalContent = cloneDeep(post.content)
+	// In case `loadResourceLinks()` will be cancelled, the original
+	// `post.content` and `post.contentPreview` should be restored.
+	// That is done by performing a list of "undo" operations
+	// rather than keeping and restoring a "reference" to the original `post.content`
+	// because `post.content` will be mutated (updated "in place" rather than via "copy-on-write").
+	const postContentChangeUndoOperations = []
+	const addUndoOperation = (operation) => {
+		postContentChangeUndoOperations.push(operation)
+	}
+
+	// `post.content` will be changed ("mutated") every time it has loaded a resource link.
+	// At the same time, it should restore the original `post.content` on cancel.
+	// For that, it uses "undo operations".
+	//
+	// As an alternative approach, it could also simply deeply clone `post.content`
+	// and then modify the deeply cloned copy, and if the application calls `cancel()`
+	// then it could simply restore the original `post.content` reference.
+	//
+	// It could also optimize the cloning approach by only cloning `post.content`
+	// in case any resource link was loaded, which would skip the cloning part
+	// for the majority of `post`s which don't have any resource links.
+	// But this resource loader first finds resource links in `post.content`
+	// and only after that it attempts to load those links, so it would become
+	// a "chicken and egg" issue: it would have already captured the reference to a link object
+	// inside the original (uncloned) `post.content` so it would mutate the original `post.content` anyway.
+	//
+	// const originalContent = cloneDeep(post.content)
+	const originalContentPreview = post.contentPreview
 
 	// Could also clone the post so that the original `post`
 	// is only changed after the updated post has rendered.
@@ -116,27 +137,41 @@ export default function loadResourceLinks_(post, {
 		}
 	}
 
-	let cancelled
-	function onSomeResourceLinkProcessed(hasResourceBeenLoaded) {
-		if (cancelled) {
+	function onSomeResourceLinkProcessed(result) {
+		// Migrate legacy `result: boolean` to a new `result: object` format.
+		if (result === true) {
+			result = { loadable: true }
+		} else if (result === false || result === undefined) {
+			result = { loadable: false }
+		}
+		// If `loadResourceLinks()` function was stopped while loading this resource
+		// then no changes have been made to `post.content`.
+		if (result.stopped) {
 			return
 		}
-		if (hasResourceBeenLoaded) {
-			// A resource link has been found and has been loaded:
+		// If `result.loadable` is `true`, it means that `link.content` has been changed.
+		// Even if `result.error` is `true`, `link.content` still might've been changed.
+		// For example, when a YouTube video is not found, it sets `link.content` to "Video not found".
+		if (result.loadable) {
+			// A resource link has been found and has been loaded (possibly with an error):
 			// the `post.content` object has been changed by adding an
 			// `.attachment` object to the link inside `post.content`.
 			onPostLinkAttachmentLoaded()
 		}
 	}
 
-	let results = [
-		loadResourceLinks(post.content, RESOURCES, {
-			cache,
-			// sync,
-			youTubeApiKey,
-			messages
-		})
-	]
+	let cancelled
+	let stopped
+	let finished
+
+	let promises = loadResourceLinks_(post.content, RESOURCES, {
+		cache,
+		// sync,
+		youTubeApiKey,
+		messages,
+		addUndoOperation,
+		hasBeenStopped: () => stopped
+	})
 
 	// if (sync) {
 	// 	return onSomeResourceLinkProcessed(results.findIndex(_ => _) >= 0)
@@ -145,32 +180,71 @@ export default function loadResourceLinks_(post, {
 	// This is a point of customization to add some other custom resource loaders.
 	// Is used in `captchan` to fix `lynxchan` post attachment sizes and URLs.
 	if (loadResources) {
+		console.warn('`loadResources` parameter of `loadResourceLinks()` is deprecated, use `additionalResourceLoadingPromises` parameter instead')
 		additionalResourceLoadingPromises = loadResources()
 	}
 	if (additionalResourceLoadingPromises) {
-		results = results.concat(additionalResourceLoadingPromises)
+		promises = promises.concat(additionalResourceLoadingPromises)
+	}
+
+	// Calling `.stop()` prevents the `loadResourceLinks()` function
+	// from making any further changes to the `post` object.
+	const stop = () => {
+		// Ignore if `.stop()` is called more than one time,
+		// or after `.cancel()`.
+		if (stopped) {
+			return
+		}
+		// Set `stopped` flag to `true`.
+		stopped = true
 	}
 
 	return {
-		promise: resolvePromises(results, onSomeResourceLinkProcessed),
+		promise: resolvePromises(promises, onSomeResourceLinkProcessed).then(() => {
+			// "Finished" means "all resources have been loaded with either success or error".
+			// I.e. `finished === true` doesn't mean "successfully finished" but rather just "finished".
+			finished = true
+		}),
 
-		// Calling `.cancel()` prevents the `loadResourceLinks()` function
+		// Calling `.stop()` prevents the `loadResourceLinks()` function
 		// from making any further changes to the `post` object.
+		stop,
+
+		// Calling `.cancel()` stops `loadResourceLinks()` function
+		// and reverts any changes that may have been made to the `post` object.
 		cancel: () => {
+			// Ignore if `.cancel()` is called more than one time.
+			if (cancelled) {
+				return
+			}
+
 			cancelled = true
 
+			stop()
+
 			// Revert `post.content` to its original unmodified state.
+			//
 			// The reason is that if some resource link has been loaded,
 			// an `.attachment` property has been set on the link object
 			// and it will be ignored if `loadResourceLinks()` gets called
 			// a second time on `post.content`.
+			//
 			// Calling `loadResourceLinks()` a second time happens with React
 			// in development mode: it runs all "effect" hooks twice at initial mount.
-			post.content = originalContent
+			//
+			// post.content = originalContent
+			if (postContentChangeUndoOperations.length > 0) {
+				// Revert the changes to `post.content`.
+				for (const undoOperation of postContentChangeUndoOperations) {
+					undoOperation()
+				}
+				// Revert the changes to `post.contentPreview`.
+				post.contentPreview = originalContentPreview
 
-			// Re-render the post because `post.content` has been reverted.
-			if (onContentChange) {
-				onContentChange()
+				// Re-render the post because `post.content` has been reverted to its original state.
+				if (onContentChange) {
+					onContentChange()
+				}
 			}
 		}
 	}
@@ -219,40 +293,44 @@ export default function loadResourceLinks_(post, {
  * @param  {object<Resource>} Resources — Supported service resource types.
  * @param  {boolean} [options.sync] — Deprecated.
  * @param  {object} [options.cache]
+ * @param  {(string|string[])} [options.youTubeApiKey]
  * @param  {object} [options.messages]
- * @return {(boolean|Promise)} Have any resource links been loaded
+ * @param  {function} [options.addUndoOperation]
+ * @param  {function} [options.hasBeenStopped]
+ * @return {(object|Promise<object>)[]} An array of result objects having properties: `stopped: boolean?`, `loadable: boolean?`, `loaded: boolean?`, `error: boolean?`.
  */
-export function loadResourceLinks(content, Resources, options) {
-	const results = visitPostParts(
+export function loadResourceLinks_(content, Resources, {
+	// sync,
+	...options
+}) {
+	function getPromiseThatResolvesToValue(result) {
+		if (result && typeof result.then === 'function') {
+			return result
+		}
+		// if (sync) {
+		// 	return result
+		// } else {
+			return Promise.resolve(result)
+		// }
+	}
+
+	return visitPostParts(
 		'link',
 		(link) => {
-			function resultOrPromise(result) {
-				if (result && typeof result.then === 'function') {
-					return result
-				}
-				if (options.sync) {
-					return result
-				} else {
-					return Promise.resolve(result)
-				}
-			}
 			if (!isLoadableLink(link, Resources)) {
-				return resultOrPromise(false)
+				return getPromiseThatResolvesToValue({ loadable: false })
 			}
 			const Resource = Resources[link.service]
-			return resultOrPromise(loadResourceLink(link, Resource, options))
+			return getPromiseThatResolvesToValue(loadResourceLink(link, Resource, options))
 		},
 		content
 	)
-	if (options.sync) {
-		return getLoadLinksResult(results)
-	} else {
-		return Promise.all(results).then(getLoadLinksResult)
-	}
-}
 
-function getLoadLinksResult(results) {
-	return results.findIndex(_ => _) >= 0
+	// if (sync) {
+	// 	return results
+	// } else {
+	// 	return results
+	// }
 }
 
 /**
@@ -262,27 +340,57 @@ function getLoadLinksResult(results) {
  * rather that at the next "tick" when `{ sync: true }` option is passed.
  * @param  {object} link — `{ type: 'link' }`.
  * @param  {object} Resource
- * @param  {boolean} [options.sync] — Deprecated.
  * @param  {object} [options.cache]
+ * @param  {(string|string[])} [options.youTubeApiKey]
  * @param  {object} [options.messages]
- * @return {(boolean|Promise<boolean>)} [result]
+ * @param  {function} [options.addUndoOperation]
+ * @param  {function} [options.hasBeenStopped]
+ * @return {(object|Promise<object>)} Result object having properties: `stopped: boolean?`, `loadable: boolean?`, `loaded: boolean?`, `error: boolean?`.
  */
-function loadResourceLink(link, Resource, options) {
+function loadResourceLink(link, Resource, {
+	cache,
+	youTubeApiKey,
+	messages,
+	addUndoOperation,
+	hasBeenStopped
+}) {
 	const { url, service } = link
 	const descriptor = Resource.parseUrl(url)
 	if (!descriptor) {
-		return false
+		return {
+			loadable: false
+		}
+	}
+	const onLoaded = (resource) => {
+		if (hasBeenStopped()) {
+			return {
+				stopped: true
+			}
+		}
+		if (resource) {
+			onResourceLinkLoadedSuccess(link, resource, { Resource, addUndoOperation })
+			return {
+				loadable: true,
+				loaded: true
+			}
+		} else if (resource === null) {
+			onResourceLinkLoadedError(link, { Resource, messages, addUndoOperation })
+			return {
+				loadable: true,
+				error: true
+			}
+		} else {
+			return {
+				loadable: false
+			}
+		}
 	}
 	const id = Resource.getId(descriptor)
-	const { cache } = options
 	const resource = cache && cache.get(service, id)
-	const onLoaded = (resource) => {
-		return onResourceLinkLoaded(link, resource, Resource, options)
-	}
 	if (resource !== undefined) {
 		return onLoaded(resource)
 	}
-	return Resource.load(descriptor, options).then((resource) => {
+	return Resource.load(descriptor, { youTubeApiKey, messages }).then((resource) => {
 		if (resource !== undefined && cache) {
 			cache.put(service, id, resource)
 		}
@@ -290,42 +398,84 @@ function loadResourceLink(link, Resource, options) {
 	})
 }
 
-function onResourceLinkLoaded(link, resource, Resource, options) {
-	if (resource) {
-		link.attachment = Resource.getAttachment(resource)
-		if (link.contentGenerated) {
-			const content = Resource.getContent(resource)
-			if (content) {
-				link.content = content
-				// Unmark the link `content` as autogenerated
-				// so that it's output as-is (as "Resource Title")
-				// in autogenerated quotes instead of "(link to service.com)".
-				delete link.contentGenerated
-			}
+// Replaces autogenerated `link.content` with the new `content`.
+function replaceLinkGeneratedContentWith(link, content, { addUndoOperation }) {
+	const originalContent = link.content
+
+	// Set `link.content` and `link.contentGenerated`.
+	link.content = content
+	// Unmark the link `content` as autogenerated
+	// so that it's output as-is (as "Resource Title")
+	// in autogenerated quotes instead of "(link to service.com)".
+	delete link.contentGenerated
+
+	addUndoOperation(() => {
+		// Restores the original `link.content`.
+		link.content = originalContent
+		// Restores the original `link.contentGenerated`.
+		link.contentGenerated = true
+	})
+}
+
+// Updates the `link` object after it has attempted to load the resource:
+// * If the resource was loaded then it sets `link.content`/`link.contentGenerated` and also sets `link.attachment`.
+// * If the resource was not loaded then it sets `link.content`/`link.contentGenerated` and also sets `link.__loadResourceLinkError = true`.
+function onResourceLinkLoadedSuccess(link, resource, { Resource, addUndoOperation }) {
+	// Set `link.attachment`.
+	link.attachment = Resource.getAttachment(resource)
+
+	addUndoOperation(() => {
+		// Restores the original `link.attachment`.
+		// If there was `link.attachment` property then this function wouldn't be called
+		// so `link.attachment` is not supposed to exist on the original `link`
+		delete link.attachment
+	})
+
+	// If previous `link.content` was automatically generated,
+	// set `link.content` from the loaded attachment.
+	if (link.contentGenerated) {
+		const content = Resource.getContent(resource)
+		if (content) {
+			replaceLinkGeneratedContentWith(link, content, { addUndoOperation })
 		}
-		return true
-	} else if (resource === null) {
-		link.notFound = true
-		if (link.contentGenerated) {
-			const notFoundMessage = options.messages && Resource.getNotFoundMessage && Resource.getNotFoundMessage(options.messages)
-			if (notFoundMessage) {
-				link.content = notFoundMessage
-				delete link.contentGenerated
-			}
+	}
+}
+
+function onResourceLinkLoadedError(link, { Resource, messages, addUndoOperation }) {
+	link.__loadResourceLinkError = true
+
+	addUndoOperation(() => {
+		// If `link.__loadResourceLinkError` was originally `true` then this function wouldn't be called
+		// so `link.__loadResourceLinkError` property is not supposed to exist on the original `link`.
+		delete link.__loadResourceLinkError
+	})
+
+	// If previous `link.content` was automatically generated,
+	// set `link.content` to "Not found" message.
+	if (link.contentGenerated) {
+		const notFoundMessage = messages && Resource.getNotFoundMessage && Resource.getNotFoundMessage(messages)
+		if (notFoundMessage) {
+			replaceLinkGeneratedContentWith(link, notFoundMessage, { addUndoOperation })
 		}
+	}
+}
+
+function isResourceLink(link, Resources) {
+	// If it's a link to a non-supported service then skip.
+	// Otherwise, the link is loadable.
+	const Resource = link.service && Resources[link.service]
+	return Boolean(Resource)
+}
+
+function hasResourceLinkAlreadyBeenLoaded(link) {
+	// If the resource has already been loaded then skip.
+	if (link.attachment || link.__loadResourceLinkError) {
 		return true
 	}
 }
 
 function isLoadableLink(link, Resources) {
-	// If the resource has already been loaded then skip.
-	if (link.attachment || link.notFound) {
-		return false
-	}
-	// If it's a link to a non-supported service then skip.
-	// Otherwise, the link is loadable.
-	const Resource = link.service && Resources[link.service]
-	return Boolean(Resource)
+	return isResourceLink(link, Resources) && !hasResourceLinkAlreadyBeenLoaded(link)
 }
 
 export const RESOURCES = {

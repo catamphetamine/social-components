@@ -1,8 +1,12 @@
-import { loadResourceLinks } from './loadResourceLinks.js'
+import { loadResourceLinks_ } from './loadResourceLinks.js'
 import YouTubeResource from './YouTubeResource.js'
 
 function loadYouTubeLinks(content, options = {}) {
-	return loadResourceLinks(content, { youtube: YouTubeResource }, options)
+	return loadResourceLinks_(content, { youtube: YouTubeResource }, {
+		...options,
+		hasBeenStopped: () => false,
+		addUndoOperation: () => {}
+	})
 }
 
 // Returns a `Promise`.
@@ -20,10 +24,23 @@ export default function YouTubeResourceTestWithApiKey(youTubeApiKey) {
 			' def'
 		]
 	]
-	return loadYouTubeLinks(content, { youTubeApiKey }).then(
+	const loadYouTubeLinksResult = loadYouTubeLinks(content, { youTubeApiKey })
+	if (!Array.isArray(loadYouTubeLinksResult)) {
+		console.error('YouTube video link load result is not an array', loadYouTubeLinksResult)
+		return Promise.resolve([content])
+	}
+	if (loadYouTubeLinksResult.length !== 1) {
+		console.error('YouTube video link load result is not an array of a single element', loadYouTubeLinksResult)
+		return Promise.resolve([content])
+	}
+	if (!isPromise(loadYouTubeLinksResult[0])) {
+		console.error('YouTube video link load result is not an array of a Promise', loadYouTubeLinksResult)
+		return Promise.resolve([content])
+	}
+	return loadYouTubeLinksResult[0].then(
 		(result) => {
-			if (!result) {
-				console.error('Couldn\'t load YouTube video link')
+			if (!isObject(result) || !result.loadable || !result.loaded) {
+				console.error('Couldn\'t load YouTube video link', result)
 				return [content]
 			}
 			return [
@@ -72,4 +89,14 @@ export default function YouTubeResourceTestWithApiKey(youTubeApiKey) {
 			]
 		}
 	)
+}
+
+const objectConstructor = {}.constructor
+
+function isObject(object) {
+  return object !== undefined && object !== null && object.constructor === objectConstructor
+}
+
+function isPromise(value) {
+	return value && typeof value.then === 'function'
 }
