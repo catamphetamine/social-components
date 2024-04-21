@@ -8,7 +8,7 @@ export type CensoredText<CensoredTextElement> = CensoredTextItem<CensoredTextEle
 export type CensoredTextItem<CensoredTextElement> = string | CensoredTextElement;
 
 export function compileWordPatterns(patterns: string[], language: string): CompiledWordPattern[];
-export function censorWords(text: string, filters: CompiledWordPattern[]): string | CensoredText;
+export function censorWords<CensoredTextElement>(text: string, filters: CompiledWordPattern[]): string | CensoredText<CensoredTextElement>;
 
 export interface TrimTextOptions {
 	getCharactersCountPenaltyForLineBreak?: ({ textBefore: string }) => number;

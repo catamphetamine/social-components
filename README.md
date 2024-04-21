@@ -645,6 +645,7 @@ Messages is an object with localized labels having shape:
 	    * Parameters:
 	      * `{path}` — URL path. `"/"` when not present.
 	  -->
+* `videoNotFound?: string`
 
 ## To do
 

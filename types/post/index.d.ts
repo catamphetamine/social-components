@@ -1,9 +1,9 @@
-import type { Id } from './Id.d.js'
-import type { Attachment } from './Attachment.d.js';
-import type { Content, InlineElementLink, InlineElementPostLink } from './Content.d.js';
-import type { Post } from './Post.d.js';
-import type { PictureSize } from './ContentType.d.js';
-import type { Messages } from './messages.json.d.js';
+import type { Id } from '../Id.d.js'
+import type { Attachment } from '../Attachment.d.js';
+import type { Content, InlineElementLink, InlineElementPostLink } from '../Content.d.js';
+import type { Post } from '../Post.d.js';
+import type { PictureSize } from '../ContentType.d.js';
+import type { Messages } from '../messages.json.d.js';
 import type { ResourceCacheStorage } from '../cache/index.d.js';
 
 export const LETTER_PATTERN_BY_LANGUAGE: string;
@@ -56,9 +56,9 @@ export interface GeneratePostPreviewOptions {
 	maxLength?: number;
 	minFitFactor?: number;
 	maxFitFactor?: number;
-	string?: textTrimMarkEndOfWord;
-	string?: textTrimMarkAbrupt;
-	boolean?: minimizeGeneratedPostLinkBlockQuotes;
+	textTrimMarkEndOfWord?: string;
+	textTrimMarkAbrupt?: string;
+	minimizeGeneratedPostLinkBlockQuotes?: boolean;
 }
 
 export function generatePostPreview(post: Post, options?: GeneratePostPreviewOptions): Content | undefined;
@@ -66,10 +66,10 @@ export function generatePostPreview(post: Post, options?: GeneratePostPreviewOpt
 export function getNonEmbeddedAttachments(post: Post): Attachment[];
 export function getSortedAttachments(post: Post): Attachment[] | undefined;
 
-export function removeLeadingPostLink(post: Post, postLinkTest: Id | (postLink: InlineElementPostLink) => boolean): void;
+export function removeLeadingPostLink(post: Post, postLinkTest: Id | ((postLink: InlineElementPostLink) => boolean)): void;
 
 interface LoadResourceLinksOptions {
-	cache?: ResourceCacheStorage;
+	cache?: ResourceCacheStorage<any>;
 	youTubeApiKey?: string;
 	messages?: Messages;
 	onContentChange?: () => void;
@@ -78,4 +78,10 @@ interface LoadResourceLinksOptions {
 	minimizeGeneratedPostLinkBlockQuotes?: boolean
 }
 
-export function loadResourceLinks(post: Post, options?: LoadResourceLinksOptions);
+export interface LoadResourceLinksResult {
+	stop: () => void;
+	cancel: () => void;
+	promise: Promise<void>;
+}
+
+export function loadResourceLinks(post: Post, options?: LoadResourceLinksOptions): LoadResourceLinksResult;

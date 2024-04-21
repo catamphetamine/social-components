@@ -1,8 +1,10 @@
-import type { Content, ContentBlock, InlineContent, InlineElement, InlineElementQuote, InlineElementLink, InlineElementWithType, BlockElement, BlockElementQuote } from './Content.d.js';
+import type { Content, ContentBlock, InlineContent, InlineElement, InlineElementQuote, InlineElementLink, InlineElementWithType, BlockElement, BlockElementQuote } from '../Content.d.js';
 import type { GetPostTextOptions } from '../post/index.d.js';
 import type { CensoredText, CompiledWordPattern } from '../text/index.d.js';
 
-export function transformContent(content: Content, transform: (part: InlineElement | BlockElement) => VisitResult) => InlineElement | BlockElement | false | undefined): void;
+type TransformContentFunction = (contentElement: InlineElement | BlockElement) => InlineElement | InlineElement[] | BlockElement | false | undefined;
+
+export function transformContent(content: Content, transform: TransformContentFunction): void;
 
 export interface TrimContentOptions {
 	left?: boolean;
