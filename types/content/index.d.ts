@@ -31,8 +31,6 @@ export function censorWords(text: string, filters: CompiledWordPattern[]): strin
 
 export function getInlineContentText(content: InlineContent, options?: GetPostTextOptions): string | undefined;
 
-export function getInlineContentText(content: InlineContent, options?: GetPostTextOptions): string | undefined;
-
 export function getContentBlocks(content: Content): ContentBlock[];
 
 export function isPostLinkQuote(postLink: ContentBlock): boolean;
