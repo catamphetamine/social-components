@@ -1,6 +1,6 @@
 {
   "name": "social-components",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Social services components",
   "type": "module",
   "exports": {
@@ -9,36 +9,52 @@
       "default": "./index.js"
     },
     "./attachment": {
-      "types": "./attachment/index.d.ts",
+      "types": "./types/attachment/index.d.ts",
       "default": "./utility/attachment/index.js"
     },
     "./cache": {
-      "types": "./cache/index.d.ts",
+      "types": "./types/cache/index.d.ts",
       "default": "./utility/cache/index.js"
     },
     "./content": {
-      "types": "./content/index.d.ts",
+      "types": "./types/content/index.d.ts",
       "default": "./utility/content/index.js"
     },
     "./post": {
-      "types": "./post/index.d.ts",
+      "types": "./types/post/index.d.ts",
       "default": "./utility/post/index.js"
     },
     "./resource": {
-      "types": "./resource/index.d.ts",
+      "types": "./types/resource/index.d.ts",
       "default": "./utility/resource/index.js"
     },
-    "./service": {
-      "types": "./service/index.d.ts",
-      "default": "./utility/service/index.js"
-    },
     "./text": {
-      "types": "./text/index.d.ts",
+      "types": "./types/text/index.d.ts",
       "default": "./utility/text/index.js"
     },
     "./utility": {
-      "types": "./utility/index.d.ts",
+      "types": "./types/utility/index.d.ts",
       "default": "./utility/index.js"
+    },
+    "./services": {
+      "types": "./types/services/index.d.ts",
+      "default": "./services/index.js"
+    },
+    "./services/youtube": {
+      "types": "./types/services/youtube/index.d.ts",
+      "default": "./services/YouTube/index.js"
+    },
+    "./services/vimeo": {
+      "types": "./types/services/vimeo/index.d.ts",
+      "default": "./services/Vimeo/index.js"
+    },
+    "./services/twitter": {
+      "types": "./types/services/twitter/index.d.ts",
+      "default": "./services/Twitter/index.js"
+    },
+    "./services/instagram": {
+      "types": "./types/services/instagram/index.d.ts",
+      "default": "./services/Instagram/index.js"
     },
     "./package.json": "./package.json",
     "./messages/de.json": {

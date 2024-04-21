@@ -310,7 +310,7 @@ trimInlineContent(['\n', { type: 'text', content: ' Text ' }, '\n'])
 ### `YouTube.getVideoByUrl(url: string, options: object): Promise<object>`
 
 ```js
-import getVideoByUrl from 'social-components/services/YouTube/getVideoByUrl.js'
+import { getVideoByUrl } from 'social-components/services/youtube'
 ```
 
 Parses a YouTube video URL, queries the video info via YouTube V3 Data API and returns a `Promise` resolving to [`{ type: 'video' }`](https://gitlab.com/catamphetamine/social-components/blob/master/docs/ContentTypes.md#video) object.
@@ -323,31 +323,35 @@ Some additional YouTube utilities:
 
 ```js
 // The list of possible YouTube preview picture ("thumbnail") sizes.
-import { PREVIEW_PICTURE_SIZES } from 'social-components/services/YouTube/getVideo.js'
+import { PREVIEW_PICTURE_SIZES } from 'social-components/services/youtube'
 PREVIEW_PICTURE_SIZES[0] === {
   name: 'maxresdefault',
   width: 1280,
   height: 720
 }
 
+// Returns a YouTube video object.
+import { getVideo } from 'social-components/services/youtube'
+getVideo(videoId, options)
+
 // Returns a URL of a YouTube video's preview picture ("thumbnail").
-import { getPictureSizeUrl } from 'social-components/services/YouTube/getVideo.js'
+import { getPictureSizeUrl } from 'social-components/services/youtube'
 getPictureSizeUrl(videoId, size.name)
 
 // Returns a YouTube video URL.
-import getVideoUrl from 'social-components/services/YouTube/getVideoUrl.js'
+import { getVideoUrl } from 'social-components/services/youtube'
 getVideoUrl(videoId, { startAt }?)
 
 // Returns a URL for an embedded YouTube video.
 // Can be used for embedding a video on a page via an `<iframe/>`.
-import getEmbeddedVideoUrl from 'social-components/services/YouTube/getEmbeddedVideoUrl.js'
+import { getEmbeddedVideoUrl } from 'social-components/services/youtube'
 getEmbeddedVideoUrl(videoId, { autoPlay, startAt }?)
 ```
 
 ### `Vimeo.getVideoByUrl(url: string): Promise<object>`
 
 ```js
-import getVideoByUrl from 'social-components/services/Vimeo/getVideoByUrl.js'
+import { getVideoByUrl } from 'social-components/services/vimeo'
 ```
 
 Parses a Vimeo video URL, queries the video info via HTTP REST API and returns a `Promise` resolving to [`{ type: 'video' }`](https://gitlab.com/catamphetamine/social-components/blob/master/docs/ContentTypes.md#video) object.
@@ -356,19 +360,23 @@ Some additional Vimeo utilities:
 
 ```js
 // Returns a Vimeo video URL.
-import getVideoUrl from 'social-components/services/Vimeo/getVideoUrl.js'
+import { getVideoUrl } from 'social-components/services/vimeo'
 getVideoUrl(videoId)
+
+// Returns a Vimeo video object.
+import { getVideo } from 'social-components/services/vimeo'
+getVideo(videoId)
 
 // Returns a URL for an embedded Vimeo video.
 // Can be used for embedding a video on a page via an `<iframe/>`.
-import getEmbeddedVideoUrl from 'social-components/services/Vimeo/getEmbeddedVideoUrl.js'
+import { getEmbeddedVideoUrl } from 'social-components/services/vimeo'
 getEmbeddedVideoUrl(videoId, { color, autoPlay, loop }?)
 ```
 
 ### `Twitter.getTweetByUrl(url: string, options: object): Promise<object>`
 
 ```js
-import getTweetByUrl from 'social-components/services/Twitter/getTweetByUrl.js'
+import { getTweetByUrl } from 'social-components/services/twitter'
 ```
 
 Parses a Vimeo video URL, queries the video info via HTTP REST API and returns a `Promise` resolving to [`{ type: 'social' }`](https://gitlab.com/catamphetamine/social-components/blob/master/docs/ContentTypes.md#social) object.
@@ -380,7 +388,7 @@ Available `options`:
 ### `Instagram.getPostByUrl(url: string): Promise<object>`
 
 ```js
-import getPostByUrl from 'social-components/services/Instagram/getPostByUrl.js'
+import { getPostByUrl } from 'social-components/services/instagram'
 ```
 
 Parses a Vimeo video URL, queries the video info via HTTP REST API and returns a `Promise` resolving to [`{ type: 'social' }`](https://gitlab.com/catamphetamine/social-components/blob/master/docs/ContentTypes.md#social) object.
@@ -574,6 +582,31 @@ import { splitContent } from 'social-components/content'
 ```
 
 Splits `content` by an `indexPath` path into two parts: a `leftPart: Content` and a `rightPart: Content`. An `indexPath` of a certain part of `content` could be obtained via `findContentPart()` function.
+
+### `getVideoUrl(videoId: string, provider: string, options: object?)`
+
+```js
+import { getVideoUrl } from 'social-components/service'
+```
+
+Returns a URL of a video by the video's ID.
+
+Supported providers:
+
+* `YouTube`
+* `Vimeo`
+
+Available options for `YouTube`:
+
+* `startAt` — "Start from" timestamp, in seconds.
+
+### `getEmbeddedVideoUrl(videoId: string, provider: string, options: object?)`
+
+```js
+import { getEmbeddedVideoUrl } from 'social-components/service'
+```
+
+Same as `getVideoUrl` with the only difference that it returns a URL for embedding a video in an `<iframe/>`.
 
 ### `renderTweet(tweetId: string, container: Element, options: object?)`
 

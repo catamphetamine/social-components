@@ -1,14 +1,20 @@
+// Transforms top-level `Content` using a `transform`ation function. Mutates the original `Content`.
+// @param {Content} content — Top-level content. Should be "normalized" meaning that a `string` won't be accepted. Only an array of `BlockElement`s.
+// @param {function} transform — Transforms a content element. A function of content element. If returns `false` then it means "don't change" and "don't recurse into the child elements". If returns `undefined` then it means "recurse into the child elements, if present".
 export default function transformContent(content, transform) {
 	if (!Array.isArray(content)) {
-		// "Normalized" content means that it's an array of blocks,
-		// and strings can't be block-level.
+		// "Normalized" content means that if top-level `Content` is just a `string`,
+		// it should be converted into an array of an array of that `string`.
 		throw new Error('Non-normalized content passed to "transformContent"')
 	}
+	// Transform each `BlockElement` of the `Content`.
 	let i = 0
 	while (i < content.length) {
-		// Theoretically, there could exist a hypothetical case
-		// when someone transforms a block into two blocks,
-		// but such cases won't be supported in the current implementation.
+		// Possible scenarios:
+		// * (a) `ContentBlock` was an array (`InlineElement[]`) and was transformed into an array (`InlineElement[]`) — ok.
+		// * (b) `ContentBlock` was an array (`InlineElement[]`) and was not transformed into an array — can't happen due to how the code is written.
+		// * (c) `ContentBlock` was not an array (`BlockElement` or `string`) and was transformed into an array (`InlineElement[]`) — ok.
+		// * (d) `ContentBlock` was not an array (`BlockElement` or `string`) and was transformed into a non-array (`BlockElement` or `string`) — ok.
 		content[i] = transformContentPart(content[i], transform)
 		i++
 	}
@@ -16,38 +22,52 @@ export default function transformContent(content, transform) {
 
 /**
  * Transforms a `part` of content using the `transform()` function.
- * @param  {(string|object|any[])} part
- * @param  {function} transform
+ * @param  {(string|object|any[])} part — Content element.
+ * @param  {function} transform — Transforms a content element. A function of content element. If returns `false` then it means "don't change" and "don't recurse into the child elements". If returns `undefined` then it means "recurse into the child elements, if present".
  * @return {(string|object|any[])}
  */
 function transformContentPart(part, transform) {
 	if (Array.isArray(part)) {
-		let newPart = []
+		let transformedPart = []
 		for (const subpart of part) {
-			newPart = newPart.concat(transformContentPart(subpart, transform))
+			transformedPart = transformedPart.concat(transformContentPart(subpart, transform))
 		}
-		return newPart
+		return transformedPart
 	} else {
-		const result = transform(part)
-		if (result === undefined) {
-			if (typeof part !== 'string' && part.content !== undefined) {
-				let result = transformContentPart(part.content, transform)
-				if (typeof part.content === 'string') {
-					if (typeof result !== 'string') {
-						if (!Array.isArray(result)) {
-							result = [result]
-						}
-					}
+		// Transform the `part`.
+		const transformedPart = transform(part)
+		// Returning `undefined` means "recurse into the child elements, if present".
+		if (transformedPart === undefined) {
+			// If the `part` is a content block having internal `content`,
+			// recurse into that internal `content`.
+			const internalContent = typeof part === 'string' ? undefined : part.content
+			if (internalContent) {
+				let transformedContent = transformContentPart(internalContent, transform)
+				// If the internal `content` before the transformation was a string
+				// and after the transformation it became not a string then the only thing
+				// that it could become after the transformation is an array of `InlineElement`s
+				// because by definition `InlineContent` could be either a `string` or a list of `InlineElement`s.
+				const wasString = typeof internalContent === 'string'
+				const becameString = typeof transformedContent === 'string'
+				const becameInlineElements = Array.isArray(transformedContent)
+				const becameInlineElement = !becameString && !becameInlineElements
+				if (becameInlineElement) {
+					// Transform `InlineElement` into a list of `InlineElement`s
+					// so that `transformedContent` represents a valid `InlineContent`.
+					transformedContent = [transformedContent]
 				}
-				part.content = result
+				return {
+					...part,
+					content: transformedContent
+				}
 			}
+			// No changes.
 			return part
-		} else if (result === false) {
+		} else if (transformedPart === false) {
+			// Returning `false` means "no changes" and "don't recurse into the child elements".
 			return part
-		} else if (Array.isArray(result)) {
-			return result
 		} else {
-			return result
+			return transformedPart
 		}
 	}
 }
