@@ -1,4 +1,4 @@
-import unescapeContent from '../../utility/unescapeContent.js'
+import unescapeText from '../../utility/text/unescapeText.js'
 
 /**
  * Parses tweet HTML into text.
@@ -13,7 +13,7 @@ export default function getTweetText(html, { messages }) {
   }
   let textHtml = match[1]
   // Unescape content.
-  textHtml = unescapeContent(textHtml)
+  textHtml = unescapeText(textHtml)
   // Replace usernames.
   textHtml = textHtml.replace(/<a [^>]+>@(.+?)<\/a>/g, '@$1')
   // // Remove hashtags in the beginning.

@@ -1,7 +1,7 @@
-import getContentBlocks from './getContentBlocks.js'
-import getPicturesAndVideos from './getPicturesAndVideos.js'
-import getEmbeddedAttachment from './getEmbeddedAttachment.js'
-import getThumbnailSize from '../attachment/getThumbnailSize.js'
+import getContentBlocks from '../content/getContentBlocks.js'
+import getPicturesAndVideos from '../attachment/getPicturesAndVideos.js'
+import getEmbeddedAttachment from '../attachment/getEmbeddedAttachment.js'
+import sortAttachmentsByThumbnailHeightDescending from '../attachment/sortAttachmentsByThumbnailHeightDescending.js'
 
 /**
  * Sorts post attachments in the order they appear embedded in the `post`
@@ -28,31 +28,10 @@ export default function getSortedAttachments(post) {
 	// Then add all the rest of the attachments sorted by thumbnail height descending.
 	let restAttachments = attachments.filter(_ => embeddedAttachments.indexOf(_) < 0)
 	const picturesAndVideos = getPicturesAndVideos(restAttachments)
-	sortByThumbnailHeightDescending(picturesAndVideos)
+	sortAttachmentsByThumbnailHeightDescending(picturesAndVideos)
 	restAttachments = restAttachments.filter(_ => picturesAndVideos.indexOf(_) < 0)
 		.sort(sortRestAttachments)
 	return embeddedAttachments.concat(picturesAndVideos).concat(restAttachments)
-}
-
-export function sortByThumbnailHeightDescending(attachments) {
-	// A minor optimization.
-	if (attachments.length === 1) {
-		return attachments
-	}
-	return attachments.sort((a, b) => {
-		return getAttachmentThumbnailHeight(b) - getAttachmentThumbnailHeight(a)
-	})
-}
-
-function getAttachmentThumbnailHeight(attachment) {
-	const thumbnailSize = getThumbnailSize(attachment)
-	if (thumbnailSize) {
-		return thumbnailSize.height
-	} else {
-		console.error(`Unsupported attachment type for "getAttachmentThumbnailHeight()": ${attachment.type}`)
-		console.log(attachment)
-		return 0
-	}
 }
 
 const REST_ATTACHMENT_TYPES_ORDER = [

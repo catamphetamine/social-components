@@ -1,4 +1,4 @@
-import getPostText from './getPostText.js'
+import getPostText from '../post/getPostText.js'
 
 export default function getInlineContentText(content, options) {
 	if (typeof content === 'string') {

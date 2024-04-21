@@ -13,7 +13,7 @@ import getHumanReadableLinkAddress from '../getHumanReadableLinkAddress.js'
  * @param  {string} [content]
  * @return {object}
  */
-export default function createLink(url, content) {
+export default function createLinkContentElement(url, content) {
 	const parsedServiceLink = parseServiceLink(url)
 	if (content && content !== url) {
 		const link = {

@@ -5,7 +5,7 @@
  * @param  {(string|any[])} [content]
  * @return {any[]} Results returned by each `visit()`.
  */
-export default function visitPostParts(type, visit, part, $ = []) {
+export default function visitContentParts(type, visit, part, $ = []) {
 	// Post content can be empty.
 	// Or maybe even post part's content.
 	// Like `{ type: 'attachment', attachmentId: 1 }`.
@@ -17,7 +17,7 @@ export default function visitPostParts(type, visit, part, $ = []) {
 	}
 	if (Array.isArray(part)) {
 		for (const subpart of part) {
-			visitPostParts(type, visit, subpart, $)
+			visitContentParts(type, visit, subpart, $)
 		}
 		return $
 	}
@@ -29,5 +29,5 @@ export default function visitPostParts(type, visit, part, $ = []) {
 		return $
 	}
 	// Recurse into post parts.
-	return visitPostParts(type, visit, part.content, $)
+	return visitContentParts(type, visit, part.content, $)
 }

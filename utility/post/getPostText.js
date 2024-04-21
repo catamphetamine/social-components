@@ -1,7 +1,7 @@
 // import getSocialText from '../social/getSocialText.js'
 import getAttachmentText from '../attachment/getAttachmentText.js'
 import getAttachmentTypeLabel from '../attachment/getAttachmentTypeLabel.js'
-import getEmbeddedAttachment from './getEmbeddedAttachment.js'
+import getEmbeddedAttachment from '../attachment/getEmbeddedAttachment.js'
 import parseUrl from '../parseUrl.js'
 
 /**

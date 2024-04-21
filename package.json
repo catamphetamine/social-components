@@ -1,9 +1,67 @@
 {
   "name": "social-components",
-  "version": "0.3.11",
+  "version": "0.4.0",
   "description": "Social services components",
   "type": "module",
-  "main": "index.js",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./attachment": {
+      "types": "./attachment/index.d.ts",
+      "default": "./utility/attachment/index.js"
+    },
+    "./cache": {
+      "types": "./cache/index.d.ts",
+      "default": "./utility/cache/index.js"
+    },
+    "./content": {
+      "types": "./content/index.d.ts",
+      "default": "./utility/content/index.js"
+    },
+    "./post": {
+      "types": "./post/index.d.ts",
+      "default": "./utility/post/index.js"
+    },
+    "./resource": {
+      "types": "./resource/index.d.ts",
+      "default": "./utility/resource/index.js"
+    },
+    "./service": {
+      "types": "./service/index.d.ts",
+      "default": "./utility/service/index.js"
+    },
+    "./text": {
+      "types": "./text/index.d.ts",
+      "default": "./utility/text/index.js"
+    },
+    "./utility": {
+      "types": "./utility/index.d.ts",
+      "default": "./utility/index.js"
+    },
+    "./package.json": "./package.json",
+    "./messages/de.json": {
+      "types": "./types/messages.json.d.ts",
+      "import": "./messages/de.json.js",
+      "require": "./messages/de.json"
+    },
+    "./messages/en.json": {
+      "types": "./types/messages.json.d.ts",
+      "import": "./messages/en.json.js",
+      "require": "./messages/en.json"
+    },
+    "./messages/nl.json": {
+      "types": "./types/messages.json.d.ts",
+      "import": "./messages/nl.json.js",
+      "require": "./messages/nl.json"
+    },
+    "./messages/ru.json": {
+      "types": "./types/messages.json.d.ts",
+      "import": "./messages/ru.json.js",
+      "require": "./messages/ru.json"
+    }
+  },
   "sideEffects": false,
   "dependencies": {
     "fetch-jsonp": "^1.2.1",
@@ -11,11 +69,14 @@
   },
   "devDependencies": {
     "chai": "^4.3.6",
-    "mocha": "^10.0.0"
+    "mocha": "^10.0.0",
+    "npm-run-all": "^4.1.5"
   },
   "scripts": {
+    "create-json-js-files": "node scripts/create-json-js-files",
+    "build": "npm-run-all create-json-js-files",
     "test": "node --experimental-json-modules node_modules/mocha/bin/_mocha --require ./test/setup.js --reporter spec --colors --bail --exit --recursive \"./{,!(node_modules)/**/}*.test.js\"",
-    "prepublishOnly": "npm test"
+    "prepublishOnly": "npm run build && npm test"
   },
   "repository": {
     "type": "git",

@@ -60,6 +60,6 @@ export default function getMimeType(url) {
  * @param {string} mimeType — MIME type.
  * @return {string} [extension]
  */
-export function getExtension(mimeType) {
+export function getMimeTypeFileExtension(mimeType) {
 	return EXTENSIONS[mimeType]
 }

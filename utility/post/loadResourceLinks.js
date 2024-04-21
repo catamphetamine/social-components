@@ -1,10 +1,10 @@
 // import cloneDeep from 'lodash/cloneDeep.js'
 
-import YouTubeResource from './YouTubeResource.js'
-import TwitterResource from './TwitterResource.js'
+import YouTubeResource from '../resource/YouTubeResource.js'
+import TwitterResource from '../resource/TwitterResource.js'
 
-import visitPostParts from './visitPostParts.js'
-import expandStandaloneAttachmentLinks from './expandStandaloneAttachmentLinks.js'
+import visitContentParts from '../content/visitContentParts.js'
+import expandStandaloneAttachmentLinks from '../content/expandStandaloneAttachmentLinks.js'
 import generatePostPreview from './generatePostPreview.js'
 
 import resolvePromises from '../resolvePromises.js'
@@ -38,7 +38,7 @@ export default function loadResourceLinks(post, {
 	// sync
 }) {
 	// If there're no loadable links then return.
-	const hasAnyLoadableLinks = visitPostParts('link', link => isLoadableLink(link, RESOURCES))
+	const hasAnyLoadableLinks = visitContentParts('link', link => isLoadableLink(link, RESOURCES))
 
 	// In case `loadResourceLinks()` will be cancelled, the original
 	// `post.content` and `post.contentPreview` should be restored.
@@ -314,7 +314,7 @@ export function loadResourceLinks_(content, Resources, {
 		// }
 	}
 
-	return visitPostParts(
+	return visitContentParts(
 		'link',
 		(link) => {
 			if (!isLoadableLink(link, Resources)) {

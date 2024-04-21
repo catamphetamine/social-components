@@ -1,14 +1,14 @@
 // import trimText from './trimText'
-import { trimInlineContentOnSide } from './trimInlineContent.js'
-import findContentPart from './findContentPart.js'
-import findLastSentenceEnd from './findLastSentenceEnd.js'
-import splitContent from './splitContent.js'
+import { trimInlineContentOnSide } from '../content/trimInlineContent.js'
+import findContentPart from '../content/findContentPart.js'
+import findLastSentenceEnd from '../text/findLastSentenceEnd.js'
+import splitContent from '../content/splitContent.js'
 import countCharacters, {
 	AVERAGE_LINE_CHARACTERS,
 	NEW_LINE_COST
-} from './countTextBlockCharacters.js'
-import countIfNonTextPostBlockFits from './countIfNonTextPostBlockFits.js'
-import getContentBlocks from './getContentBlocks.js'
+} from '../content/countTextBlockCharacters.js'
+import countIfNonTextPostBlockFits from '../content/countIfNonTextPostBlockFits.js'
+import getContentBlocks from '../content/getContentBlocks.js'
 
 const NEW_PARAGRAPH_COST = 60
 

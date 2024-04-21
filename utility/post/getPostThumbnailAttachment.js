@@ -1,8 +1,8 @@
-import getMinSize from '../picture/getMinSize.js'
 import getNonEmbeddedAttachments from './getNonEmbeddedAttachments.js'
-import getPicturesAndVideos from './getPicturesAndVideos.js'
-import { sortByThumbnailHeightDescending } from './getSortedAttachments.js'
-// import countPostBlockCharacters from './countPostBlockCharacters.js'
+import getPicturesAndVideos from '../attachment/getPicturesAndVideos.js'
+import sortAttachmentsByThumbnailHeightDescending from '../attachment/sortAttachmentsByThumbnailHeightDescending.js'
+import getPictureMinSize from '../attachment/getPictureMinSize.js'
+// import countContentBlockCharacters from './countContentBlockCharacters.js'
 
 export default function getPostThumbnailAttachment(post, {
 	showPostThumbnailWhenThereAreMultipleAttachments,
@@ -30,19 +30,19 @@ export default function getPostThumbnailAttachment(post, {
 export function getPostThumbnailSize(attachment) {
 	switch (attachment.type) {
 		case 'picture':
-			return getMinSize(attachment.picture)
+			return getPictureMinSize(attachment.picture)
 		case 'video':
 			// Only include uploaded attachments.
 			// Skip YouTube and Vimeo videos.
 			if (!attachment.video.provider) {
-				return getMinSize(attachment.video.picture)
+				return getPictureMinSize(attachment.video.picture)
 			}
 	}
 }
 
 function getThumbnailAttachments(post) {
 	const picturesAndVideos = getPicturesAndVideos(getNonEmbeddedAttachments(post))
-	sortByThumbnailHeightDescending(picturesAndVideos)
+	sortAttachmentsByThumbnailHeightDescending(picturesAndVideos)
 	return picturesAndVideos
 }
 
@@ -80,7 +80,7 @@ function shouldCreateThumbnail(post, {
 	// 	// If the post has no title but its content spans
 	// 	// several lines then it's long enough to show a post thumbnail.
 	// 	const firstBlock = Array.isArray(post.content) ? post.content[0] : post.content
-	// 	if (countPostBlockCharacters(firstBlock, 'lines') > 1) {
+	// 	if (countContentBlockCharacters(firstBlock, 'lines') > 1) {
 	// 		return true
 	// 	}
 	// }

@@ -9,7 +9,7 @@ import countTextBlockCharacters from './countTextBlockCharacters.js'
  * @param  {boolean} [options.minimizeGeneratedPostLinkBlockQuotes] — Set to `true` to indicate that post links with generated block quotes are initially minimized when rendered: this results in skipping counting those post links' content characters.
  * @return {number}
  */
-export default function countPostBlockCharacters(block, mode, { minimizeGeneratedPostLinkBlockQuotes } = {}) {
+export default function countContentBlockCharacters(block, mode, { minimizeGeneratedPostLinkBlockQuotes } = {}) {
 	if (Array.isArray(block) || typeof block === 'string') {
 		return countTextBlockCharacters(block, mode, { minimizeGeneratedPostLinkBlockQuotes })
 	} else {

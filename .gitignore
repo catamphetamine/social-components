@@ -29,3 +29,6 @@ npm-debug.log
 
 # browser builds
 /bundle/
+
+# .json.js files
+messages/*.json.js

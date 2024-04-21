@@ -1,4 +1,4 @@
-import getContentBlocks from './getContentBlocks.js'
+import getContentBlocks from '../content/getContentBlocks.js'
 
 export default function isEmbeddedAttachment(attachment, post) {
 	if (attachment.id) {

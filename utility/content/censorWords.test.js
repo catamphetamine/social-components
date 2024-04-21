@@ -1,7 +1,7 @@
 import expectToEqual from '../expectToEqual.js'
 
 import censorWords from './censorWords.js'
-import compileWordPatterns from './compileWordPatterns.js'
+import compileWordPatterns from '../text/compileWordPatterns.js'
 
 function censorWordsTest(text, expected) {
 	expectToEqual(

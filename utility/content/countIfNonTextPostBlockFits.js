@@ -1,5 +1,5 @@
-import getAttachmentCharacterPoints from './getAttachmentCharacterPoints.js'
-import getEmbeddedAttachment from './getEmbeddedAttachment.js'
+import getAttachmentCharacterPoints from '../attachment/getAttachmentCharacterPoints.js'
+import getEmbeddedAttachment from '../attachment/getEmbeddedAttachment.js'
 
 /**
  * Counts the "points" of a non-text block (picture, video)

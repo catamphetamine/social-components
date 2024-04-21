@@ -4,18 +4,18 @@
  * @param  {object[]} filters
  * @return {(string|object)[]} An array of strings and objects of shape `{ type: 'spoiler', censored: true, content: string }`.
  */
-export default function censorWords(text, filters) {
-	return censor(text, filters) || text
+export default function censorWords(text, filters, { createCensoredTextElement }) {
+	return censor(text, filters, undefined, createCensoredTextElement) || text
 }
 
-function censor(text, filters, filterIndex = 0) {
+function censor(text, filters, filterIndex = 0, createCensoredTextElement) {
 	if (filterIndex === filters.length) {
 		return
 	}
 	const filter = filters[filterIndex]
 	const match = filter.regexp.exec(text)
 	if (!match || !match[0]) {
-		return censor(text, filters, filterIndex + 1)
+		return censor(text, filters, filterIndex + 1, createCensoredTextElement)
 	}
 	let startIndex = match.index
 	let matchedText = match[0]
@@ -30,7 +30,7 @@ function censor(text, filters, filterIndex = 0) {
 	}
 	let result
 	const preText = text.slice(0, startIndex)
-	const preTextAfterIgnore = preText ? censor(preText, filters, filterIndex) : undefined
+	const preTextAfterIgnore = preText ? censor(preText, filters, filterIndex, createCensoredTextElement) : undefined
 	if (preTextAfterIgnore) {
 		result = preTextAfterIgnore
 	} else if (preText) {
@@ -38,13 +38,9 @@ function censor(text, filters, filterIndex = 0) {
 	} else {
 		result = []
 	}
-	result.push({
-		type: 'spoiler',
-		censored: true,
-		content: matchedText
-	})
+	result.push(createCensoredTextElement(matchedText))
 	const postText = text.slice(startIndex + matchedText.length)
-	const postTextAfterIgnore = postText ? censor(postText, filters, filterIndex) : undefined
+	const postTextAfterIgnore = postText ? censor(postText, filters, filterIndex, createCensoredTextElement) : undefined
 	if (postTextAfterIgnore) {
 		result = result.concat(postTextAfterIgnore)
 	} else if (postText) {

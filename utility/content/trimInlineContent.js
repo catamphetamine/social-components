@@ -4,7 +4,7 @@
  * *** Mutates the `content`. ***
  * @param  {any[]} content
  * @param  {boolean} [options.left] — Pass `left: false` option to prevent it from trimming on the left side.
- * @param  {boolean} [options.left] — Pass `right: false` option to prevent it from trimming on the right side.
+ * @param  {boolean} [options.right] — Pass `right: false` option to prevent it from trimming on the right side.
  * @return {any[]} [result] Returns the mutated `content` (the original `content` still gets mutated). Returns `undefined` if `content` became empty as a result of the trimming.
  */
 export default function trimInlineContent(content, options = {}) {

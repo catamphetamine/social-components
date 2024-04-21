@@ -1,4 +1,4 @@
-export default function attachmentHasPicture(attachment) {
+export default function doesAttachmentHavePicture(attachment) {
 	switch (attachment.type) {
 		case 'picture':
 			return true

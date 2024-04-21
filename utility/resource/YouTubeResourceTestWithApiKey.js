@@ -1,4 +1,4 @@
-import { loadResourceLinks_ } from './loadResourceLinks.js'
+import { loadResourceLinks_ } from '../post/loadResourceLinks.js'
 import YouTubeResource from './YouTubeResource.js'
 
 function loadYouTubeLinks(content, options = {}) {

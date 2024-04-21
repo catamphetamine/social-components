@@ -66,17 +66,20 @@ export interface InlineElementReadMore {
 	type: 'read-more';
 }
 
+export type InlineElementWithType =
+  InlineElementStyledText |
+  InlineElementNewLine |
+  InlineElementEmoji |
+  InlineElementQuote |
+  InlineElementSpoiler |
+  InlineElementLink |
+  InlineElementPostLink |
+  InlineElementCode |
+  InlineElementReadMore;
+
 export type InlineElement =
 	InlineElementText |
-	InlineElementStyledText |
-	InlineElementNewLine |
-	InlineElementEmoji |
-	InlineElementQuote |
-	InlineElementSpoiler |
-	InlineElementLink |
-	InlineElementPostLink |
-	InlineElementCode |
-	InlineElementReadMore;
+	InlineElementWithType;
 
 // `InlineContent`.
 export type InlineContent = string | InlineElement[];
@@ -136,5 +139,7 @@ export type BlockElement =
 // `ContentBlock`.
 export type ContentBlock = BlockElement | InlineContent;
 
+export type ContentText = string;
+
 // `Content`.
-export type Content = string | ContentBlock[];
+export type Content = ContentText | ContentBlock[];

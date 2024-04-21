@@ -4,7 +4,7 @@
  * @param  {string} string
  * @return {string}
  */
-export default function unescapeContent(string) {
+export default function unescapeText(string) {
 	return string
 		.replace(/&quot;/g, '"')
 		.replace(/&amp;/g, '&')

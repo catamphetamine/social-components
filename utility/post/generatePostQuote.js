@@ -1,6 +1,6 @@
 import getPostText from './getPostText.js'
-import getEmbeddedAttachment from './getEmbeddedAttachment.js'
-import trimText, { MAX_FIT_FACTOR } from './trimText.js'
+import getEmbeddedAttachment from '../attachment/getEmbeddedAttachment.js'
+import trimText, { MAX_FIT_FACTOR } from '../text/trimText.js'
 
 const CHARACTERS_COUNT_PENALTY_FOR_LINE_BREAK = 15
 

@@ -35,7 +35,7 @@ The [`<Post/>` React component](https://gitlab.com/catamphetamine/webapp-fronten
 ### `getPostText(post: Post, options: object?): string?`
 
 ```js
-import getPostText from 'social-components/utility/post/getPostText.js'
+import { getPostText } from 'social-components/post'
 ```
 
 Returns a textual representation of a [Post](https://gitlab.com/catamphetamine/social-components/blob/master/docs/Post.md)
@@ -57,7 +57,7 @@ Availble `options`:
 ### `getInlineContentText(content: Content, options: object?): string?`
 
 ```js
-import getInlineContentText from 'social-components/utility/post/getInlineContentText.js'
+import { getInlineContentText } from 'social-components/content'
 ```
 
 Returns a textual representation of an [InlineContent](https://gitlab.com/catamphetamine/social-components/blob/master/docs/Content.md#inline-content). Use this function as an equivalent of `getPostText()` for inline-level content.
@@ -65,7 +65,7 @@ Returns a textual representation of an [InlineContent](https://gitlab.com/catamp
 ### `transformContent(content: Content, transform: function)`
 
 ```js
-import transformContent from 'social-components/utility/post/transformContent.js'
+import { transformContent } from 'social-components/content'
 ```
 
 Recursively walks all parts of [`content`](https://gitlab.com/catamphetamine/social-components/blob/master/docs/Content.md), calling `transform(part)` for each such part. If `transform(part)` returns:
@@ -78,7 +78,7 @@ Recursively walks all parts of [`content`](https://gitlab.com/catamphetamine/soc
 ### `generatePostQuote(post: Post, options: object?): string?`
 
 ```js
-import generatePostQuote from 'social-components/utility/post/generatePostQuote.js'
+import { generatePostQuote } from 'social-components/post'
 ```
 
 Generates a textual representation of a [Post](https://gitlab.com/catamphetamine/social-components/blob/master/docs/Post.md), that's intended to be used in a quote citing the post. Uses `getPostText()` under the hood: first starts with a strict set of options, then gradually relaxes them until some text is generated. Then compacts inter-paragraph margins into just "new line" characters, and trims the resulting text to fit into `options.maxLength` (adjusted by `options.minFitFactor` and `options.maxFitFactor`).
@@ -98,7 +98,7 @@ Availble `options`:
 ### `generatePreview(post: Post, options: object): Content?`
 
 ```js
-import generatePostPreview from 'social-components/utility/post/generatePostPreview.js'
+import { generatePostPreview } from 'social-components/post'
 ```
 
 Generates a preview for a [`Post`](https://gitlab.com/catamphetamine/social-components/blob/master/docs/Post.md) given the `options.limit`. If the post `content` is `undefined` then the returned preview content is too. Otherwise, the returned preview content isn't `undefined`. If the post `content` fits entirely then the preview content will be (deeply) equal to it. Otherwise, preview content will be a shortened version of `content` with a `{ type: 'read-more' }` marker somewhere in the end.
@@ -115,7 +115,7 @@ Available `options`:
 ### `trimText(text: string, maxLength: number, options: object?): string`
 
 ```js
-import trimText from 'social-components/utility/post/trimText.js'
+import { trimText } from 'social-components/text'
 ```
 
 Trims the `text` at `maxLength`.
@@ -134,7 +134,7 @@ Available `options`:
 ### `censorWords(text: string, filters: WordFilter[]): Content`
 
 ```js
-import censorWords from 'social-components/utility/post/censorWords.js'
+import { censorWords } from 'social-components/content'
 ```
 
 Replaces words in `text` matching the `filters` with objects of shape `{ type: "spoiler", censored: true, content: "the-word-that-got-censored" }`. The `filters: WordFilter[]` argument must be a list of word filters pre-compiled with the exported `compileWordPatterns(censoredWords, language)` function (described below).
@@ -152,7 +152,7 @@ censorWords('A red fox', FILTERS) === [
 ### `compileWordPatterns(patterns: string[], language: string): WordFilter[]`
 
 ```js
-import compileWordPatterns from 'social-components/utility/post/compileWordPatterns.js'
+import { compileWordPatterns } from 'social-components/text'
 ```
 
 Compiles word patterns into `filters` that can be used in `censorWords()`.
@@ -195,7 +195,7 @@ Word pattern examples:
 ### `loadResourceLinks(post: Post, options: object?): Promise`
 
 ```js
-import loadResourceLinks from 'social-components/utility/post/loadResourceLinks.js'
+import { loadResourceLinks } from 'social-components/post'
 ```
 
 Loads "resource" links (such as links to YouTube and Twitter) by loading the info associated with the resources. For example, sets video `.attachment` on YouTube links and sets "social" `.attachment` on Twitter links.
@@ -225,7 +225,7 @@ Expands attachment links (objects of shape `{ type: 'link', attachment: ... }` i
 <!-- In such case attachments are moved from `{ type: 'link' }` objects to `post.attachments`. -->
 
 ```js
-import expandStandaloneAttachmentLinks from "social-components/utility/post/expandStandaloneAttachmentLinks"
+import { expandStandaloneAttachmentLinks } from "social-components/content"
 
 const content = [
 	[
@@ -260,22 +260,22 @@ content === [
 ]
 ```
 
-### `visitPostParts(type: string, visit: function, content: Content): any[]`
+### `visitContentParts(type: string, visit: function, content: Content): any[]`
 
 ```js
-import visitPostParts from .js'social-components/utility/post/visitPostParts.js'
+import { visitContentParts } from 'social-components/content'
 ```
 
 Calls `visit(part)` on each part of `content` being of `type` type. Returns a list of results returned by each `visit(part)`. For example, the following example prints URLs of all `{ type: 'link' }`s in a post content.
 
 ```js
-visitPostParts('link', link => console.log(link.url), post.content)
+visitContentParts('link', link => console.log(link.url), post.content)
 ```
 
 ### `trimContent(content: Content, options: object?): Content?`
 
 ```js
-import trimContent from 'social-components/utility/post/trimContent.js'
+import { trimContent } from 'social-components/content'
 ```
 
 Trims whitespace (including newlines) in the beginning and in the end of `content`. **`content` internals will be mutated.** Returns the mutated `content` (the original `content` still gets mutated). Returns `undefined` if `content` became empty as a result of the trimming.
@@ -292,7 +292,7 @@ trimContent([['\n', ' Text '], ['\n']]) === [['Text']]
 ### `trimInlineContent(inlineContent: InlineContent, options: object?): InlineContent?`
 
 ```js
-import trimInlineContent from 'social-components/utility/post/trimInlineContent.js'
+import { trimInlineContent } from 'social-components/content'
 ```
 
 Trims whitespace (including newlines) in the beginning and in the end of `content`. `content` must be an array. **`content` internals will be mutated.** Returns the mutated `content` (the original `content` still gets mutated). Returns `undefined` if `content` became empty as a result of the trimming.
@@ -387,22 +387,22 @@ Parses a Vimeo video URL, queries the video info via HTTP REST API and returns a
 
 ## Miscellaneous API
 
-### `unescapeContent(string: string): string`
+### `unescapeText(string: string): string`
 
 ```js
-import unescapeContent from 'social-components/utility/unescapeContent.js'
+import { unescapeText } from 'social-components/text'
 ```
 
 Unescapes HTML-escaped text.
 
 ```js
-unescapeContent("&lt;div/&gt;") === "<div/>"
+unescapeText("&lt;div/&gt;") === "<div/>"
 ```
 
 ### `getColorHash(string: string): string`
 
 ```js
-import getColorHash from 'social-components/utility/getColorHash.js'
+import { getColorHash } from 'social-components/utility'
 ```
 
 Converts a string to a color.
@@ -414,7 +414,7 @@ getColorHash("Some text") === "#aabbcc"
 ### `getHumanReadableLinkAddress(url: string): string`
 
 ```js
-import getHumanReadableLinkAddress from 'social-components/utility/getHumanReadableLinkAddress.js'
+import { getHumanReadableLinkAddress } from 'social-components/utility'
 ```
 
 Returns a more human-friendly link address:
@@ -426,7 +426,7 @@ Returns a more human-friendly link address:
 ### `getContentBlocks(post: Post): any[]`
 
 ```js
-import getPostThumbnailAttachment from 'social-components/utility/post/getContentBlocks.js'
+import { getPostThumbnailAttachment } from 'social-components/post'
 ```
 
 Returns a list of ["content blocks"](https://gitlab.com/catamphetamine/social-components/blob/master/docs/Content.md#content-block) of the `post`'s `.content`. For example, if the `post`'s `.content` is just a string, then it returns an array of that string. Returns an empty array if the `post` has no content.
@@ -438,7 +438,7 @@ Removes a leading `post-link`, that satisfies the conditions, from the `post`'s 
 The `postLinkTest` argument should be the condition for removing a post link: either a post id or a function that returns `true` when the post link should be removed.
 
 ```js
-import removeLeadingPostLink from 'social-components/utility/post/removeLeadingPostLink.js'
+import { removeLeadingPostLink } from 'social-components/post'
 
 post.replies = post.replies.map((replyPost) => {
 	return removeLeadingPostLink(replyPost, post.id)
@@ -450,7 +450,7 @@ post.replies = post.replies.map((replyPost) => {
 ### `getPostThumbnailAttachment(post: Post, options: object?): Attachment?`
 
 ```js
-import getPostThumbnailAttachment from 'social-components/utility/post/getPostThumbnailAttachment.js'
+import { getPostThumbnailAttachment } from 'social-components/post'
 ```
 
 Returns an attachment that could be used as a "thumbnail" for this post. For example, could return a `Picture` or a `Video`.
@@ -464,15 +464,15 @@ Available options:
 ### `getPicturesAndVideos(attachments: Attachment[]): Attachment[]`
 
 ```js
-import getPicturesAndVideos from 'social-components/utility/post/getPicturesAndVideos.js'
+import { getPicturesAndVideos } from 'social-components/attachment'
 ```
 
 Returns `Picture`s and `Video`s.
 
-### `getMinSize(picture: Picture): object`
+### `getPictureMinSize(picture: Picture): object`
 
 ```js
-import getPicturesAndVideos from 'social-components/utility/picture/getMinSize.js'
+import { getPictureMinSize } from 'social-components/attachment'
 ```
 
 Returns the minimum "size" of a `picture`, "size" being an object of shape: `{ width: number, height: number, url: string }`.
@@ -480,7 +480,7 @@ Returns the minimum "size" of a `picture`, "size" being an object of shape: `{ w
 ### `getNonEmbeddedAttachments(post: Post): Attachment[]`
 
 ```js
-import getNonEmbeddedAttachments from 'social-components/utility/post/getNonEmbeddedAttachments.js'
+import { getNonEmbeddedAttachments } from 'social-components/post'
 ```
 
 Returns a list of post attachments that aren't embedded in the `post`'s `.content`.
@@ -488,7 +488,7 @@ Returns a list of post attachments that aren't embedded in the `post`'s `.conten
 ### `getSortedAttachments(post: Post): Attachment[]?`
 
 ```js
-import getSortedAttachments from 'social-components/utility/post/getSortedAttachments.js'
+import { getSortedAttachments } from 'social-components/post'
 ```
 
 Sorts post attachments in the order they appear embedded in the `post`, plus all the rest of them that aren't embedded in the `post`, sorted by thumbnail height descending.
@@ -498,31 +498,31 @@ Returns `undefined` if the `post` doesn't have any attachments.
 ### `getEmbeddedAttachment(block: ContentBlock, attachments: Attachment[]?): Attachment?`
 
 ```js
-import getEmbeddedAttachment from 'social-components/utility/post/getEmbeddedAttachment.js'
+import { getEmbeddedAttachment } from 'social-components/content'
 ```
 
 Returns an `Attachment` object for an embedded attachment block.
 
-### `hasPicture(attachment: Attachment): boolean?`
+### `doesAttachmentHavePicture(attachment: Attachment): boolean?`
 
 ```js
-import hasPicture from 'social-components/utility/attachment/hasPicture.js'
+import { doesAttachmentHavePicture } from 'social-components/attachment'
 ```
 
 Returns `true` if the `attachment` has a picture. Examples: `Picture`, `Video`.
 
-### `getThumbnailSize(attachment: Attachment): object?`
+### `getAttachmentThumbnailSize(attachment: Attachment): object?`
 
 ```js
-import getThumbnailSize from 'social-components/utility/attachment/getThumbnailSize.js'
+import { getAttachmentThumbnailSize } from 'social-components/attachment'
 ```
 
 Returns the `attachment`'s thumbnail size. Returns `undefined` if the `attachment` doesn't have a thumbnail.
 
-### `createLink(url: string, content: string?): object`
+### `createLinkElement(url: string, content: string?): object`
 
 ```js
-import createLink from 'social-components/utility/post/createLink.js'
+import { createLinkElement } from 'social-components/content'
 ```
 
 Creates a [`link`](https://gitlab.com/catamphetamine/social-components/blob/master/docs/Content.md#post-link) object from a link's URL (`url`) and a link's text (`content`). The `link` object can additionally have a `service: string` property (example: `"youtube"`).
@@ -532,7 +532,7 @@ The `url` will be parsed to see if a `service` can be detec For example, a YouTu
 ### `getMimeType(url: string): string?`
 
 ```js
-import getMimeType from 'social-components/utility/getMimeType.js'
+import { getMimeType } from 'social-components/utility'
 ```
 
 Returns a [MIME type](https://en.wikipedia.org/wiki/Media_type) by file URL (or filesystem path, or filename). Basically, looks at the file extension. Returns `undefined` if the MIME type couldn't be determined.
@@ -540,7 +540,7 @@ Returns a [MIME type](https://en.wikipedia.org/wiki/Media_type) by file URL (or 
 ### `combineQuotes(content: Content)`
 
 ```js
-import combineQuotes from 'social-components/utility/post/combineQuotes.js'
+import { combineQuotes } from 'social-components/content'
 ```
 
 Combines `{ type: "quote" }` objects on consequtive lines into a single `{ type: "quote" }` object with `"\n"`s inside. **Mutates the original `content`**.
@@ -548,7 +548,7 @@ Combines `{ type: "quote" }` objects on consequtive lines into a single `{ type:
 ### `findContentPart(content: Content, test: function, options: object?): number[]?`
 
 ```js
-import findContentPart from 'social-components/utility/post/findContentPart.js'
+import { findContentPart } from 'social-components/content'
 ```
 
 Recursively searches `content` for the parts for which the `test(part)` function returns `true`. Returns an "index path" (an array of recursive content part indexes, like a path in a "tree").
@@ -570,7 +570,7 @@ Available options:
 ### `splitContent(content: Content, indexPath: number[], options: object?): Content[]`
 
 ```js
-import splitContent from 'social-components/utility/post/splitContent.js'
+import { splitContent } from 'social-components/content'
 ```
 
 Splits `content` by an `indexPath` path into two parts: a `leftPart: Content` and a `rightPart: Content`. An `indexPath` of a certain part of `content` could be obtained via `findContentPart()` function.
@@ -578,7 +578,7 @@ Splits `content` by an `indexPath` path into two parts: a `leftPart: Content` an
 ### `renderTweet(tweetId: string, container: Element, options: object?)`
 
 ```js
-import renderTweet from 'social-components/Twitter/renderTweet.js'
+import { renderTweet } from 'social-components/service'
 ```
 
 Renders a tweet in a `container`.

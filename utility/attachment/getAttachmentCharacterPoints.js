@@ -1,4 +1,4 @@
-import countTextBlockCharacters, { AVERAGE_LINE_CHARACTERS } from './countTextBlockCharacters.js'
+import countTextBlockCharacters, { AVERAGE_LINE_CHARACTERS } from '../content/countTextBlockCharacters.js'
 
 const EMBEDDED_ATTACHMENT_COST = AVERAGE_LINE_CHARACTERS * 3
 const EMBEDDED_PICTURE_COST = AVERAGE_LINE_CHARACTERS * 6

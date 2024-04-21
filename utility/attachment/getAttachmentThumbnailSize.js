@@ -1,9 +1,9 @@
-import getMinSize from '../picture/getMinSize.js'
+import getPictureMinSize from './getPictureMinSize.js'
 
-export default function getThumbnailSize(attachment) {
+export default function getAttachmentThumbnailSize(attachment) {
 	const picture = getAttachmentPicture(attachment)
 	if (picture) {
-		return getMinSize(picture)
+		return getPictureMinSize(picture)
 	}
 }
 
