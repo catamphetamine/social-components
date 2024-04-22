@@ -1,36 +1,45 @@
 import findContentPart from './findContentPart.js'
 import splitContent from './splitContent.js'
+import getContentBlocks from './getContentBlocks.js'
 
 /**
- * Splits `content` into paragraphs where there're two or more `\n` characters.
+ * Splits `content` into content blocks where there're two or more `\n` characters.
  * @param  {any} content
- * @return {any} A copy of `content` with paragraphs split.
+ * @return {any} A copy of `content` with newContentBlocks split.
  */
 export default function splitContentIntoBlocksByMultipleLineBreaks(content) {
-	let paragraphs = content
+	const originalContent = content
+	content = getContentBlocks(content)
+
+	// `newContentBlocks` is "lazily" initialized, i.e. it doesn't get initialized
+	// until there's an actual split point found.
+	let newContentBlocks
+
 	let i = 0
 	while (i < content.length) {
-		let split
+		let splitResult
 		if (Array.isArray(content[i])) {
-			split = splitParagraph(content[i])
+			splitResult = splitParagraph(content[i])
 		}
-		if (Array.isArray(split)) {
-			// Initializing `paragraphs` on demand is a minor optimization
-			// for cases when paragraphs likely won't be split.
-			if (paragraphs === content) {
-				paragraphs = paragraphs.slice(0, i)
+		if (Array.isArray(splitResult)) {
+			// Initializing `newContentBlocks` on demand is a minor optimization
+			// for cases when newContentBlocks likely won't be split.
+			if (!newContentBlocks) {
+				newContentBlocks = content.slice(0, i)
 			}
-			paragraphs = paragraphs.concat(split)
+			newContentBlocks = newContentBlocks.concat(splitResult)
 		} else {
-			// Initializing `paragraphs` on demand is a minor optimization
-			// for cases when paragraphs likely won't be split.
-			if (paragraphs !== content) {
-				paragraphs.push(content[i])
+			// Initializing `newContentBlocks` on demand is a minor optimization
+			// for cases when newContentBlocks likely won't be split.
+			if (newContentBlocks) {
+				newContentBlocks.push(content[i])
 			}
 		}
 		i++
 	}
-	return paragraphs
+
+	// If no split point was found, returns the original `content`.
+	return newContentBlocks || originalContent
 }
 
 const WHITESPACE = /^\s+$/

@@ -1,6 +1,4 @@
-// import addAttachment from './addAttachment'
-
-// * In such case attachments are moved from `{ type: 'link' }` objects to `post.attachments`.
+import getContentBlocks from './getContentBlocks.js'
 
 /**
  * Expands attachment links (objects of shape `{ type: 'link', attachment: ... }`)
@@ -8,33 +6,31 @@
  * @param  {Content} content
  */
 export default function expandStandaloneAttachmentLinks(content) {
-	if (!content) {
-		return
-	}
+	content = getContentBlocks(content)
 	let j = 0
 	while (j < content.length) {
-		const paragraph = content[j]
-		// Only processes text paragraphs.
-		if (!Array.isArray(paragraph)) {
+		const contentBlock = content[j]
+		// Only processes text contentBlocks.
+		if (!Array.isArray(contentBlock)) {
 			j++
 			continue
 		}
 		let i = 0
-		while (i < paragraph.length) {
-			const element = paragraph[i]
+		while (i < contentBlock.length) {
+			const element = contentBlock[i]
 			if (typeof element === 'object' &&
 				element.type === 'link' &&
 				element.attachment &&
 				shouldExpandAttachment(element.attachment)) {
-				const prevBlock = paragraph[i - 1]
-				const nextBlock = paragraph[i + 1]
+				const prevBlock = contentBlock[i - 1]
+				const nextBlock = contentBlock[i + 1]
 				if ((!prevBlock || prevBlock === '\n') && (!nextBlock || nextBlock === '\n')) {
 					const blocks = []
-					// Add previous paragraph.
+					// Add previous contentBlock.
 					let beforeLinkContent
 					if (i - 1 > 0) {
 						// There may be more than one '\n' separating stuff.
-						beforeLinkContent = trimNewLines(paragraph.slice(0, i - 1))
+						beforeLinkContent = trimNewLines(contentBlock.slice(0, i - 1))
 						if (beforeLinkContent.length > 0) {
 							blocks.push(beforeLinkContent)
 						}
@@ -51,18 +47,18 @@ export default function expandStandaloneAttachmentLinks(content) {
 					// 	type: 'attachment',
 					// 	attachmentId: addAttachment(post, element.attachment)
 					// })
-					// Add next paragraph.
-					if (paragraph.length > i + 1) {
+					// Add next contentBlock.
+					if (contentBlock.length > i + 1) {
 						// There may be more than one '\n' separating stuff.
-						const afterLinkContent = trimNewLines(paragraph.slice(i + 1 + 1))
+						const afterLinkContent = trimNewLines(contentBlock.slice(i + 1 + 1))
 						if (afterLinkContent.length > 0) {
 							blocks.push(afterLinkContent)
 						}
 					}
-					// Replace the current paragraph with three blocks:
-					// * Content of the paragraph before the link.
+					// Replace the current contentBlock with three blocks:
+					// * Content of the contentBlock before the link.
 					// * The link that has been expanded into an attachment.
-					// * Content of the paragraph after the link.
+					// * Content of the contentBlock after the link.
 					content.splice(j, 1, ...blocks)
 					// Adjust the next block index.
 					if (beforeLinkContent) {

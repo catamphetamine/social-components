@@ -289,7 +289,7 @@ Available options:
 trimContent([['\n', ' Text '], ['\n']]) === [['Text']]
 ```
 
-### `trimInlineContent(inlineContent: InlineContent, options: object?): InlineContent?`
+### `trimInlineContent(inlineContent: InlineElement[], options: object?): InlineContent?`
 
 ```js
 import { trimInlineContent } from 'social-components/content'
@@ -493,7 +493,7 @@ import { getNonEmbeddedAttachments } from 'social-components/post'
 
 Returns a list of post attachments that aren't embedded in the `post`'s `.content`.
 
-### `getSortedAttachments(post: Post): Attachment[]?`
+### `getSortedAttachments(post: Post): Attachment[]`
 
 ```js
 import { getSortedAttachments } from 'social-components/post'

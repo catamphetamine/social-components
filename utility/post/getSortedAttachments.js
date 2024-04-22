@@ -8,11 +8,11 @@ import sortAttachmentsByThumbnailHeightDescending from '../attachment/sortAttach
  * plus all the rest of them that aren't embedded in the `post`,
  * sorted by thumbnail height descending.
  * @param  {object} post
- * @return {object[]} [attachments] Returns `undefined` if the `post` doesn't have any attachments.
+ * @return {object[]} attachments — Returns post attachments sorted by the order in which they appear in the `post` content. Attachments that don't appear in the `post` content are at the end of the list.
  */
 export default function getSortedAttachments(post) {
 	if (!post.attachments) {
-		return
+		return []
 	}
 	const attachments = post.attachments
 	const embeddedAttachments = []

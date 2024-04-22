@@ -1,4 +1,5 @@
 import forEachFollowingQuote from './forEachFollowingQuote.js'
+import getContentBlocks from './getContentBlocks.js'
 
 /**
  * Combines `{ type: 'quote' }` objects on consequtive lines
@@ -6,20 +7,15 @@ import forEachFollowingQuote from './forEachFollowingQuote.js'
  * @param  {any} content
  */
 export default function combineQuotes(content) {
-	if (!content) {
-		return
-	}
-	if (!Array.isArray(content)) {
-		return
-	}
-	for (const paragraph of content) {
-		if (Array.isArray(paragraph)) {
-			_combineQuotes(paragraph)
+	content = getContentBlocks(content)
+	for (const block of content) {
+		if (Array.isArray(block)) {
+			combineQuotesInContentBlock(block)
 		}
 	}
 }
 
-function _combineQuotes(content) {
+function combineQuotesInContentBlock(content) {
 	let i = 0
 	while (i < content.length) {
 		if (content[i].type === 'quote') {

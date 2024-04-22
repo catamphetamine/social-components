@@ -4,10 +4,10 @@ export interface CompiledWordPattern {
 	regexp: RegExp;
 }
 
-export type CensoredText<CensoredTextElement> = CensoredTextItem<CensoredTextElement>[];
 export type CensoredTextItem<CensoredTextElement> = string | CensoredTextElement;
+export type CensoredText<CensoredTextElement> = CensoredTextItem<CensoredTextElement>[];
 
-export function compileWordPatterns(patterns: string[], language: string): CompiledWordPattern[];
+export function compileWordPatterns(patterns: string[], language?: string): CompiledWordPattern[];
 export function censorWords<CensoredTextElement>(text: string, filters: CompiledWordPattern[]): string | CensoredText<CensoredTextElement>;
 
 export interface TrimTextOptions {

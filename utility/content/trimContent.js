@@ -1,3 +1,4 @@
+import getContentBlocks from './getContentBlocks.js'
 import trimInlineContent from './trimInlineContent.js'
 
 /**
@@ -10,6 +11,7 @@ import trimInlineContent from './trimInlineContent.js'
  * @return {any[][]} [result] Returns the mutated `content` (the original `content` still gets mutated). Returns `undefined` if `content` became empty as a result of the trimming.
  */
 export default function trimContent(content, options = {}) {
+	content = getContentBlocks(content)
 	// // `content` internals will be mutated.
 	// content = content.slice()
 	let i = 0

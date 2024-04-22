@@ -84,6 +84,8 @@ export type InlineElement =
 // `InlineContent`.
 export type InlineContent = string | InlineElement[];
 
+export type InlineContentAtom = string | InlineElement;
+
 // `BlockElement`.
 
 export interface BlockElementHeading {
@@ -109,19 +111,21 @@ export interface BlockElementQuote {
   content: InlineContent;
 }
 
-export interface BlockElementAttachmentReference {
+export interface BlockElementAttachmentBase {
   type: 'attachment';
-  attachmentId: number;
   expand?: boolean;
   link?: string;
 }
 
-export interface BlockElementAttachment {
-  type: 'attachment';
-  attachment: Attachment;
-  expand?: boolean;
-  link?: string;
+export interface BlockElementAttachmentReference extends BlockElementAttachmentBase {
+  attachmentId: number;
 }
+
+export interface BlockElementAttachment_ extends BlockElementAttachmentBase {
+  attachment: Attachment;
+}
+
+export type BlockElementAttachment = BlockElementAttachment_ | BlockElementAttachmentReference;
 
 export interface BlockElementReadMore {
 	type: 'read-more';

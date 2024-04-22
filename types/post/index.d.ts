@@ -18,7 +18,7 @@ export interface GetPostTextOptions {
 	skipUntitledAttachments?: boolean;
 	spaceOutParagraphs?: boolean;
 	onAttachment?: (attachment: Attachment) => void;
-	getLinkTitle?: (link: InlineElementLink) => string;
+	getLinkTitle?: (link: InlineElementLink) => string | undefined;
 	trimCodeBlocksToFirstLine?: boolean;
 	stopOnNewLine?: boolean;
 	openingQuote?: string;
@@ -64,18 +64,25 @@ export interface GeneratePostPreviewOptions {
 export function generatePostPreview(post: Post, options?: GeneratePostPreviewOptions): Content | undefined;
 
 export function getNonEmbeddedAttachments(post: Post): Attachment[];
-export function getSortedAttachments(post: Post): Attachment[] | undefined;
+export function getSortedAttachments(post: Post): Attachment[];
 
-export function removeLeadingPostLink(post: Post, postLinkTest: Id | ((postLink: InlineElementPostLink) => boolean)): void;
+export function removeLeadingPostLink(post: Post, postLinkCriterion: Id | ((postLink: InlineElementPostLink) => boolean)): void;
 
-interface LoadResourceLinksOptions {
+export interface LoadResourceLinkResult {
+	loadable?: boolean;
+	loaded?: boolean;
+	stopped?: boolean;
+	error?: boolean;
+}
+
+export interface LoadResourceLinksOptions {
 	cache?: ResourceCacheStorage<any>;
 	youTubeApiKey?: string;
 	messages?: Messages;
 	onContentChange?: () => void;
 	contentMaxLength?: number;
-	additionalResourceLoadingPromises?: Promise<{ loadable: boolean, loaded?: boolean }>[];
-	minimizeGeneratedPostLinkBlockQuotes?: boolean
+	additionalResourceLoadingPromises?: Promise<LoadResourceLinkResult>[];
+	minimizeGeneratedPostLinkBlockQuotes?: boolean;
 }
 
 export interface LoadResourceLinksResult {

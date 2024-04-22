@@ -1,10 +1,10 @@
-import type { Content, ContentBlock, InlineContent, InlineElement, InlineElementQuote, InlineElementLink, InlineElementWithType, BlockElement, BlockElementQuote } from '../Content.d.js';
+import type { Content, ContentBlock, InlineContent, InlineContentAtom, InlineElement, InlineElementQuote, InlineElementLink, InlineElementWithType, BlockElement, BlockElementQuote } from '../Content.d.js';
 import type { GetPostTextOptions } from '../post/index.d.js';
 import type { CensoredText, CompiledWordPattern } from '../text/index.d.js';
 
-type TransformContentFunction = (contentElement: InlineElement | BlockElement) => InlineElement | InlineElement[] | BlockElement | false | undefined;
+type TransformContentFunction = (contentElement: BlockElement | InlineContentAtom) => BlockElement | InlineContentAtom | InlineContentAtom[] | false | undefined;
 
-export function transformContent(content: Content, transform: TransformContentFunction): void;
+export function transformContent(content: ContentBlock[], transform: TransformContentFunction): void;
 
 export interface TrimContentOptions {
 	left?: boolean;
@@ -16,10 +16,10 @@ export interface TrimInlineContentOptions {
 	right?: boolean;
 }
 
-export function trimContent(content: Content, options?: TrimContentOptions): Content | undefined;
-export function trimInlineContent(inlineContent: InlineContent, options?: TrimInlineContentOptions): InlineContent | undefined;
+export function trimContent(content: ContentBlock[], options?: TrimContentOptions): ContentBlock[] | undefined;
+export function trimInlineContent(inlineContent: InlineElement[], options?: TrimInlineContentOptions): InlineElement[] | undefined;
 
-export function visitContentParts<VisitResult>(type: string, visit: (part: InlineElementWithType | BlockElement) => VisitResult, content: Content): VisitResult[];
+export function visitContentParts<VisitResult>(type: string, visit: (part: InlineElementWithType | BlockElement) => VisitResult, content?: Content): VisitResult[];
 
 export function createLinkElement(url: string, content: InlineContent): InlineElementLink;
 
@@ -33,15 +33,15 @@ export function censorWords(text: string, filters: CompiledWordPattern[]): strin
 
 export function getInlineContentText(content: InlineContent, options?: GetPostTextOptions): string | undefined;
 
-export function getContentBlocks(content: Content): ContentBlock[];
+export function getContentBlocks(content?: Content): ContentBlock[];
 
-export function isPostLinkQuote(postLink: ContentBlock): boolean;
-export function isPostLinkBlockQuote(postLink: ContentBlock): boolean;
-export function isPostLinkGeneratedQuote(postLink: ContentBlock): boolean;
+export function isPostLinkQuote(postLink: InlineElementPostLink): boolean;
+export function isPostLinkBlockQuote(postLink: InlineElementPostLink): boolean;
+export function isPostLinkGeneratedQuote(postLink: InlineElementPostLink): boolean;
 
-export function expandStandaloneAttachmentLinks(content: Content): void;
+export function expandStandaloneAttachmentLinks(content?: Content): void;
 
-export function forEachFollowingQuote(content: Content, startIndex: number, action: (quote: InlineElementQuote | BlockElementQuote, i: number) => void): void;
-export function combineQuotes(content: Content): void;
+export function forEachFollowingQuote(content: InlineContent, startIndex: number, action: (quote: InlineElementQuote, i: number) => void): void;
+export function combineQuotes(content?: Content): void;
 
 export function splitContentIntoBlocksByMultipleLineBreaks(content: Content): Content;

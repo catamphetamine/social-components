@@ -1,12 +1,10 @@
+import getContentBlocks from './getContentBlocks.js'
+
 // Transforms top-level `Content` using a `transform`ation function. Mutates the original `Content`.
 // @param {Content} content — Top-level content. Should be "normalized" meaning that a `string` won't be accepted. Only an array of `BlockElement`s.
 // @param {function} transform — Transforms a content element. A function of content element. If returns `false` then it means "don't change" and "don't recurse into the child elements". If returns `undefined` then it means "recurse into the child elements, if present".
 export default function transformContent(content, transform) {
-	if (!Array.isArray(content)) {
-		// "Normalized" content means that if top-level `Content` is just a `string`,
-		// it should be converted into an array of an array of that `string`.
-		throw new Error('Non-normalized content passed to "transformContent"')
-	}
+	content = getContentBlocks(content)
 	// Transform each `BlockElement` of the `Content`.
 	let i = 0
 	while (i < content.length) {
