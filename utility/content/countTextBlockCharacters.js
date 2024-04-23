@@ -17,7 +17,7 @@ export const NEW_LINE_COST = 30
  * The block must be a "text" one.
  * @param  {any} block
  * @param  {string} mode — One of: points, characters, lines.
- * @param  {boolean} [options.minimizeGeneratedPostLinkBlockQuotes] — Set to `true` to indicate that post links with generated block quotes are initially minimized when rendered: this results in skipping counting those post links' content characters.
+ * @param  {boolean} [options.minimizeGeneratedPostLinkBlockQuotes] — One can pass `true` to indicate that auto-generated quotes are minimized by default until the user expands them manually. This would mean that auto-generated quotes shouldn't be accounted for when calculating the total length of a comment when creating a shorter "preview" for it in case it exceeds the maxum preferred length.
  * @return {number}
  */
 export default function countTextBlockCharacters(block, mode, { minimizeGeneratedPostLinkBlockQuotes } = {}) {

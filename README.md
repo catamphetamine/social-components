@@ -110,7 +110,7 @@ Available `options`:
 * `maxFitFactor: number?` — Provides some flexibility when defining `maxLength` upper boundary: sets it to `maxFitFactor * maxLength`. The content then can usually be trimmed anywhere between `minFitFactor * maxLength` and `maxFitFactor * maxLength` limit. Is `1.2` by default.
 * `textTrimMarkEndOfWord: string?` — Appends this "trim mark" when text has to be trimmed after word end (but not after sentence end). Is "…" by default.
 * `textTrimMarkAbrupt: string?` — Appends this "trim mark" when text has to be trimmed mid-word. Is "…" by default.
-* `minimizeGeneratedPostLinkBlockQuotes: boolean?` — Set to `true` to indicate that post links with generated block quotes are initially minimized when rendered: this results in skipping counting those post links' content characters when generating post preview.
+* `minimizeGeneratedPostLinkBlockQuotes: boolean?` — One can pass `true` to indicate that auto-generated quotes are minimized by default until the user expands them manually. This would mean that auto-generated quotes shouldn't be accounted for when calculating the total length of a comment when creating a shorter "preview" for it in case it exceeds the maxum preferred length.
 
 ### `trimText(text: string, maxLength: number, options: object?): string`
 

@@ -26,7 +26,7 @@ const TEXT_TRIM_MARK_ABRUPT = '…'
  * @param  {number} [options.maxFitFactor] — `maxLength` upper limit extension. See `maxFitFactor` option of `trimText()`.
  * @param  {string} [options.textTrimMarkEndOfWord] — Appends this "trim mark" when text has to be trimmed after word end (but not after sentence end). Is "…" by default.
  * @param  {string} [options.textTrimMarkAbrupt] — Appends this "trim mark" when text has to be trimmed mid-word. Is "…" by default.
- * @param  {boolean} [options.minimizeGeneratedPostLinkBlockQuotes] — Set to `true` to indicate that post links with generated block quotes are initially minimized when rendered: this results in skipping counting those post links' content characters when generating post preview.
+ * @param  {boolean} [options.minimizeGeneratedPostLinkBlockQuotes] — One can pass `true` to indicate that auto-generated quotes are minimized by default until the user expands them manually. This would mean that auto-generated quotes shouldn't be accounted for when calculating the total length of a comment when creating a shorter "preview" for it in case it exceeds the maxum preferred length.
  * @return {Content} [previewContent] Preview content. If `content` was `undefined` then `previewContent` is too. Otherwise, `previewContent` isn't `undefined`. If the `content` fits entirely then the preview content will be (deeply) equal to it. Otherwise, preview content will be a shortened version of `content` with a `{ type: 'read-more' }` marker somewhere in the end.
  */
 export default function generatePostPreview({ content, attachments }, options) {
