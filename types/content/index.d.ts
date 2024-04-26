@@ -1,4 +1,4 @@
-import type { Content, ContentBlock, InlineContent, InlineContentAtom, InlineElement, InlineElementQuote, InlineElementLink, InlineElementWithType, BlockElement, BlockElementQuote } from '../Content.d.js';
+import type { Content, ContentBlock, InlineContent, InlineContentAtom, InlineElement, InlineElementPostLink, InlineElementQuote, InlineElementLink, InlineElementWithType, BlockElement, BlockElementQuote } from '../Content.d.js';
 import type { GetPostTextOptions } from '../post/index.d.js';
 import type { CensoredText, CompiledWordPattern } from '../text/index.d.js';
 

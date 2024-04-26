@@ -33,6 +33,10 @@ export {
 } from './Attachment.d.js';
 
 export {
+	Messages
+} from './messages.json.d.js';
+
+export {
 	Content,
 	ContentBlock,
 	InlineContent,
@@ -47,6 +51,7 @@ export {
 	InlineElementPostLink,
 	InlineElementCode,
 	InlineElementReadMore,
+	InlineElementWithType,
 	BlockElement,
 	BlockElementHeading,
 	BlockElementList,

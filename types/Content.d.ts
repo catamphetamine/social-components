@@ -68,7 +68,6 @@ export interface InlineElementReadMore {
 
 export type InlineElementWithType =
   InlineElementStyledText |
-  InlineElementNewLine |
   InlineElementEmoji |
   InlineElementQuote |
   InlineElementSpoiler |
@@ -78,8 +77,9 @@ export type InlineElementWithType =
   InlineElementReadMore;
 
 export type InlineElement =
-	InlineElementText |
-	InlineElementWithType;
+  InlineElementText |
+  InlineElementNewLine |
+  InlineElementWithType;
 
 // `InlineContent`.
 export type InlineContent = string | InlineElement[];
