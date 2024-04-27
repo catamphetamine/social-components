@@ -1,3 +1,5 @@
+export const LETTER_PATTERN_BY_LANGUAGE: Record<string, string>;
+
 export interface CompiledWordPattern {
 	includesWordStart: boolean;
 	includesWordEnd: boolean;

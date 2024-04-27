@@ -6,8 +6,6 @@ import type { PictureSize } from '../ContentType.d.js';
 import type { Messages } from '../messages.json.d.js';
 import type { ResourceCacheStorage } from '../cache/index.d.js';
 
-export const LETTER_PATTERN_BY_LANGUAGE: string;
-
 export interface GetPostTextOptions {
 	softLimit?: number;
 	messages?: object;
