@@ -7,7 +7,7 @@ export interface ResourceCacheStorage<Value> {
 }
 
 export class ResourceCache<Value> {
-  constructor(storage: ResourceCacheStorage<any>);
+  constructor(parameters: { storage: ResourceCacheStorage<any> });
 	get(service: ResourceCacheService, key: string): Value | undefined;
 	put(service: ResourceCacheService, key: string, value: Value): void;
 	clear(service: ResourceCacheService): void;
