@@ -37,6 +37,8 @@ export interface Audio {
   provider?: string;
   id?: string;
   bitrate?: number;
+  size?: number;
+  duration?: number;
   date?: Date;
   author?: string;
   title?: string;
@@ -49,5 +51,6 @@ export interface File {
   ext?: string;
   size?: number;
   url: string;
+  name?: string;
   picture?: Picture;
 }

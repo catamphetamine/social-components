@@ -192,6 +192,12 @@ Videos can be video files or videos provided by some service like YouTube. Video
   // Audio file bitrate (in bits per second).
   bitrate: number?
 
+  // File size (in bytes).
+  size: number?,
+
+  // Audio duration (in seconds).
+  duration: number?,
+
   // The date on which the audio file was recorded.
   date: Date?
 
@@ -260,6 +266,9 @@ Videos can be video files or videos provided by some service like YouTube. Video
 
   // File size (in bytes).
   size: number?,
+
+  // File name.
+  name?: string,
 
   // File URL.
   url: string,

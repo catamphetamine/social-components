@@ -9,6 +9,12 @@ import {
   SocialAttachment
 } from './SocialAttachment.d.js';
 
-export type Attachment =
+type Attachment_ =
 	ResourceAttachment |
 	SocialAttachment;
+
+interface AttachmentCommonProperties {
+  id?: number;
+}
+
+export type Attachment = AttachmentCommonProperties & Attachment_
