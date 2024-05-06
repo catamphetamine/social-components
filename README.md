@@ -616,6 +616,8 @@ import { renderTweet } from 'social-components/service'
 
 Renders a tweet in a `container`.
 
+Returns a `Promise` that resolves to an HTML `Element`.
+
 Available options:
 
 * `darkMode: boolean` — Pass `true` to render the tweet in dark mode.

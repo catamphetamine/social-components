@@ -10,4 +10,4 @@ export interface RenderTweetOptions {
 	locale?: string;
 }
 
-export function renderTweet(id: string, container: HTMLElement, options?: RenderTweetOptions): Promise<JSX.Element>;
+export function renderTweet(id: string, container: HTMLElement, options?: RenderTweetOptions): Promise<HTMLElement>;
