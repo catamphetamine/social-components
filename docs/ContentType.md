@@ -13,12 +13,14 @@ Content can not just be in textual form, it can also be a picture, a video, an a
   type: string,
 
   // Picture width.
-  // Is absent for vector images (example: `*.svg`).
-  width: number?,
+  // * Is required for raster images (`*.jpg`, `*.png`, etc).
+  // * Is required for vector images (`*.svg`) to calcuate their aspect ratio.
+  width: number,
 
   // Picture height.
-  // Is absent for vector images (example: `*.svg`).
-  height: number?,
+  // * Is required for raster images (`*.jpg`, `*.png`, etc).
+  // * Is required for vector images (`*.svg`) to calcuate their aspect ratio.
+  height: number,
 
   // Picture file size (in bytes).
   size: number?,

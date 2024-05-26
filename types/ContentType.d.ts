@@ -10,8 +10,10 @@ export interface PictureSize {
 
 export interface Picture {
   type: string;
-  width?: number;
-  height?: number;
+  // Picture dimensions are also required for vector images
+  // in order to be able to calculate their aspect ratio.
+  width: number;
+  height: number;
   size?: number;
   url: string;
   title?: string;
