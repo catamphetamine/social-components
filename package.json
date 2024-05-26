@@ -1,6 +1,6 @@
 {
   "name": "social-components",
-  "version": "0.4.9",
+  "version": "0.4.10",
   "description": "Social services components",
   "type": "module",
   "exports": {

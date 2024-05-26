@@ -10,8 +10,8 @@ export interface PictureSize {
 
 export interface Picture {
   type: string;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
   size?: number;
   url: string;
   title?: string;

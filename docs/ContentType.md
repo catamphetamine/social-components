@@ -6,14 +6,19 @@ Content can not just be in textual form, it can also be a picture, a video, an a
 
 ```js
 {
-  // Picture MIME type. Example: "image/jpeg".
+  // Picture MIME type. Examples:
+  // * "image/jpeg" for `*.jpg`
+  // * "image/png" for `*.png`
+  // * "image/svg+xml" for `*.svg`
   type: string,
 
   // Picture width.
-  width: number,
+  // Is absent for vector images (example: `*.svg`).
+  width: number?,
 
   // Picture height.
-  height: number,
+  // Is absent for vector images (example: `*.svg`).
+  height: number?,
 
   // Picture file size (in bytes).
   size: number?,
