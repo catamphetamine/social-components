@@ -326,9 +326,11 @@ describe('expandStandaloneAttachmentLinks', () => {
 	// 				"Previous thread: ",
 	// 				{
 	// 					"type": "post-link",
-	// 					"boardId": "vg",
-	// 					"threadId": 242722274,
-	// 					"postId": 242722274,
+	// 					"meta": {
+	// 						"boardId": "vg",
+	// 						"threadId": 242722274,
+	// 						"postId": 242722274
+	// 					},
 	// 					"content": "Сообщение",
 	// 					"url": "/vg/242722274#comment-242722274"
 	// 				},
@@ -534,9 +536,11 @@ describe('expandStandaloneAttachmentLinks', () => {
 	// 					"Previous thread: ",
 	// 					{
 	// 						"type": "post-link",
-	// 						"boardId": "vg",
-	// 						"threadId": 242722274,
-	// 						"postId": 242722274,
+	// 						"meta": {
+	// 							"boardId": "vg",
+	// 							"threadId": 242722274,
+	// 							"postId": 242722274
+	// 						},
 	// 						"content": "Сообщение",
 	// 						"url": "/vg/242722274#comment-242722274"
 	// 					},

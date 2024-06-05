@@ -3,6 +3,9 @@ import getAttachmentText from '../attachment/getAttachmentText.js'
 import getAttachmentTypeLabel from '../attachment/getAttachmentTypeLabel.js'
 import getEmbeddedAttachment from '../attachment/getEmbeddedAttachment.js'
 import parseUrl from '../parseUrl.js'
+import isPostLinkQuote from '../content/isPostLinkQuote.js'
+import isPostLinkBlockQuote from '../content/isPostLinkBlockQuote.js'
+import isPostLinkGeneratedQuote from '../content/isPostLinkGeneratedQuote.js'
 
 /**
  * Converts post content to text.
@@ -167,8 +170,8 @@ export function getContentText(content, softLimit, options = {}) {
 		case 'emoji':
 			return `:${part.name}:`
 		case 'post-link':
-			const hasQuotes = Array.isArray(part.content) && part.content[0].type === 'quote'
-			const hasQuoteBlocks = hasQuotes && part.content[0].block
+			const hasQuotes = isPostLinkQuote(part)
+			const hasQuoteBlocks = isPostLinkBlockQuote(part)
 			const hasInlineQuotes = hasQuotes && !hasQuoteBlocks
 			if (options.onPostLink) {
 				options.onPostLink(part)
@@ -179,7 +182,7 @@ export function getContentText(content, softLimit, options = {}) {
 				return
 			}
 			if (options.skipPostQuoteBlocks && hasQuoteBlocks ||
-				(options.skipGeneratedPostQuoteBlocks !== false) && hasQuoteBlocks && part.content[0].generated) {
+				(options.skipGeneratedPostQuoteBlocks !== false) && hasQuoteBlocks && isPostLinkGeneratedQuote(part)) {
 				return
 			}
 			if (Array.isArray(part.content)) {

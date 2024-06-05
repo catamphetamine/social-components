@@ -122,7 +122,7 @@ describe('getPostText', () => {
 							content: [{
 								type: 'quote',
 								content: 'Quote',
-								generated: true
+								contentGenerated: true
 							}]
 						},
 						'\n',
@@ -148,7 +148,7 @@ describe('getPostText', () => {
 							content: [{
 								type: 'quote',
 								content: 'Quote',
-								generated: true,
+								contentGenerated: true,
 								block: true
 							}]
 						},

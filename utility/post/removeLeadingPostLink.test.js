@@ -2,20 +2,24 @@ import removeLeadingPostLink from './removeLeadingPostLink.js'
 
 import expectToEqual from '../expectToEqual.js'
 
-function expectNotRemoveLeadingPostLink(content) {
+function postLinkTest(postLink) {
+	return postLink.meta.postId === 123
+}
+
+function expectToNotRemoveLeadingPostLink(content) {
 	expectToEqual(
-		removeLeadingPostLink({ content }, 123),
+		removeLeadingPostLink({ content }, postLinkTest),
 		{ content }
 	)
 }
 
 describe('removeLeadingPostLink', () => {
 	it('shouldn\'t remove leading post link when there\'s none', () => {
-		expectNotRemoveLeadingPostLink(undefined)
-		expectNotRemoveLeadingPostLink([
+		expectToNotRemoveLeadingPostLink(undefined)
+		expectToNotRemoveLeadingPostLink([
 			'Text'
 		])
-		expectNotRemoveLeadingPostLink([
+		expectToNotRemoveLeadingPostLink([
 			[
 				'Text'
 			]
@@ -23,37 +27,43 @@ describe('removeLeadingPostLink', () => {
 	})
 
 	it('shouldn\'t remove leading post link when it\'s not the first part in paragraph', () => {
-		expectNotRemoveLeadingPostLink([
+		expectToNotRemoveLeadingPostLink([
 			[
 				'Text',
 				{
 					type: 'post-link',
-					postId: 123
+					meta: {
+						postId: 123
+					}
 				}
 			]
 		])
 	})
 
 	it('shouldn\'t remove leading post link when it\'s not the first paragraph', () => {
-		expectNotRemoveLeadingPostLink([
+		expectToNotRemoveLeadingPostLink([
 			[
 				'Text'
 			],
 			[
 				{
 					type: 'post-link',
-					postId: 123
+					meta: {
+						postId: 123
+					}
 				}
 			]
 		])
 	})
 
 	it('shouldn\'t remove leading post link when it\'s not standalone', () => {
-		expectNotRemoveLeadingPostLink([
+		expectToNotRemoveLeadingPostLink([
 			[
 				{
 					type: 'post-link',
-					postId: 123
+					meta: {
+						postId: 123
+					}
 				},
 				'Text'
 			]
@@ -68,14 +78,16 @@ describe('removeLeadingPostLink', () => {
 						[
 							{
 								type: 'post-link',
-								postId: 123
+								meta: {
+									postId: 123
+								}
 							},
 							'\n',
 							'Text'
 						]
 					]
 				},
-				123
+				postLinkTest
 			),
 			{
 				content: [
@@ -98,16 +110,18 @@ describe('removeLeadingPostLink', () => {
 								content: [{
 									type: 'quote',
 									content: 'Abc',
-									generated: true
+									contentGenerated: true
 								}],
-								postId: 123
+								meta: {
+									postId: 123
+								}
 							},
 							'\n',
 							'Text'
 						]
 					]
 				},
-				123
+				postLinkTest
 			),
 			{
 				content: [
@@ -131,14 +145,16 @@ describe('removeLeadingPostLink', () => {
 									type: 'quote',
 									content: 'Abc'
 								}],
-								postId: 123
+								meta: {
+									postId: 123
+								}
 							},
 							'\n',
 							'Text'
 						]
 					]
 				},
-				123
+				postLinkTest
 			),
 			{
 				content: [
@@ -149,7 +165,9 @@ describe('removeLeadingPostLink', () => {
 								type: 'quote',
 								content: 'Abc'
 							}],
-							postId: 123
+							meta: {
+								postId: 123
+							}
 						},
 						'\n',
 						'Text'
@@ -177,14 +195,16 @@ describe('removeLeadingPostLink', () => {
 										content: 'Def'
 									}
 								],
-								postId: 123
+								meta: {
+									postId: 123
+								}
 							},
 							'\n',
 							'Text'
 						]
 					]
 				},
-				123
+				postLinkTest
 			),
 			{
 				content: [
@@ -201,7 +221,9 @@ describe('removeLeadingPostLink', () => {
 									content: 'Def'
 								}
 							],
-							postId: 123
+							meta: {
+								postId: 123
+							}
 						},
 						'\n',
 						'Text'

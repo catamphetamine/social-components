@@ -64,7 +64,7 @@ export function generatePostPreview(post: Post, options?: GeneratePostPreviewOpt
 export function getNonEmbeddedAttachments(post: Post): Attachment[];
 export function getSortedAttachments(post: Post): Attachment[];
 
-export function removeLeadingPostLink(post: Post, postLinkCriterion: Id | ((postLink: InlineElementPostLink) => boolean)): void;
+export function removeLeadingPostLink(post: Post, postLinkCriterion: (postLink: InlineElementPostLink) => boolean): void;
 
 export interface LoadResourceLinkResult {
 	loadable?: boolean;

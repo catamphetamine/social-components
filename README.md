@@ -439,7 +439,7 @@ import { getPostThumbnailAttachment } from 'social-components/post'
 
 Returns a list of ["content blocks"](https://gitlab.com/catamphetamine/social-components/blob/master/docs/Content.md#content-block) of the `post`'s `.content`. For example, if the `post`'s `.content` is just a string, then it returns an array of that string. Returns an empty array if the `post` has no content.
 
-### `removeLeadingPostLink(post: Post, postLinkTest: (any|function))`
+### `removeLeadingPostLink(post: Post, postLinkTest: function)`
 
 Removes a leading `post-link`, that satisfies the conditions, from the `post`'s `.content`. Can be used to remove parent post quotes from replies when showing the parent post's replies tree.
 
@@ -449,9 +449,7 @@ The `postLinkTest` argument should be the condition for removing a post link: ei
 import { removeLeadingPostLink } from 'social-components/post'
 
 post.replies = post.replies.map((replyPost) => {
-	return removeLeadingPostLink(replyPost, post.id)
-	// Or, the same:
-	// return removeLeadingPostLink(replyPost, (postLink) => postLink.postId === post.id)
+	return removeLeadingPostLink(replyPost, (postLink) => postLink.meta.postId === post.id)
 })
 ```
 

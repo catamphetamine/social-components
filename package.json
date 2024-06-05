@@ -1,12 +1,15 @@
 {
   "name": "social-components",
-  "version": "0.4.11",
+  "version": "0.4.12",
   "description": "Social services components",
   "type": "module",
   "exports": {
     ".": {
       "types": "./index.d.ts",
       "default": "./index.js"
+    },
+    "./prop-types": {
+      "default": "./prop-types/index.js"
     },
     "./attachment": {
       "types": "./types/attachment/index.d.ts",

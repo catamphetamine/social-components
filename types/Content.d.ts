@@ -29,6 +29,7 @@ export interface InlineElementEmoji {
 
 export interface InlineElementQuote {
   type: 'quote';
+  contentGenerated?: boolean;
   content: InlineContent;
   kind?: string;
   block?: boolean;
@@ -51,10 +52,14 @@ export interface InlineElementLink {
 
 export interface InlineElementPostLink {
   type: 'post-link';
-  url: string;
-  postId: Id;
+  url?: string;
+  // This is an "extension" point for a `post-link` element.
+  // For example, it could contain `authorId`, `channelId`, `threadId`, etc.
+  meta: InlineElementPostLinkMeta;
   content: InlineContent;
 }
+
+export type InlineElementPostLinkMeta = Record<string, any>
 
 export interface InlineElementCode {
   type: 'code';
@@ -108,6 +113,7 @@ export interface BlockElementQuote {
   type: 'quote';
   url?: string;
   source?: string;
+  contentGenerated?: boolean;
   content: InlineContent;
 }
 

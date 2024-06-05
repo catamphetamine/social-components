@@ -1,3 +1,18 @@
+0.4.12 / 05.06.2024
+==================
+
+* `type: "post-link"`:
+  * Added required `meta` property.
+  * Removed `postId` property.
+  * `url` property is optional.
+
+* `type: "quote"`:
+  * Added `contentGenerated?: boolean` property.
+
+* Chaned `removeLeadingPostLink()` arguments: `postLinkTest` argument is now only allowed to be a function.
+
+* Added `/prop-types` export.
+
 0.3.4 / 10.02.2023
 ==================
 
