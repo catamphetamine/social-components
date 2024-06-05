@@ -647,6 +647,12 @@ Messages is an object with localized labels having shape:
 	  -->
 * `videoNotFound?: string`
 
+## `PropTypes`
+
+```js
+import * as SocialComponentPropTypes from 'social-components/prop-types'
+```
+
 ## To do
 
 * `source/services/YouTube/getVideo.js` and `source/services/Vimeo/getVideo.js` both use `fetch()` global function which isn't supported in Node.js. Developers using this package could optionally polyfill `fetch()` on server side (for example, see `/fetch-polyfill`).

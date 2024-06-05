@@ -309,10 +309,10 @@ export const postReadMore = shape({
 
 export const postPostLinkShape = shape({
 	type: oneOf(['post-link']).isRequired,
-	meta: object,
+	meta: object.isRequired,
 	// threadId: oneOfType([string, number]),
 	// boardId: oneOfType([string, number]),
-	url?: string,
+	url: string,
 	content: postInlineContentStub
 })
 
