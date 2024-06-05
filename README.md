@@ -621,6 +621,14 @@ Available options:
 * `darkMode: boolean` — Pass `true` to render the tweet in dark mode.
 * `locale: string` — Viewer's [language code](https://en.wikipedia.org/wiki/IETF_language_tag) (examples: `"en"`, `"ru"`, `"de"`).
 
+### `isVectorImage(image: object): boolean`
+
+```js
+import { isVectorImage } from 'social-components/image'
+```
+
+Tells if an image is a vector one. The `image` argument could be a `Picture` or one of the `Picture.sizes[]`.
+
 ### Messages
 
 Messages is an object with localized labels having shape:
