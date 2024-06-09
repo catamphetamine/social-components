@@ -13,7 +13,7 @@ export function compileWordPatterns(patterns: string[], language?: string): Comp
 export function censorWords<CensoredTextElement>(text: string, filters: CompiledWordPattern[]): string | CensoredText<CensoredTextElement>;
 
 export interface TrimTextOptions {
-	getCharactersCountPenaltyForLineBreak?: ({ textBefore: string }) => number;
+	getCharactersCountPenaltyForLineBreak?: (params: { textBefore: string }) => number;
 	minFitFactor?: number;
 	maxFitFactor?: number;
 	trimPoint?: string;
