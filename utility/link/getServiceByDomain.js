@@ -8,6 +8,7 @@ import gitlab from './services/gitlab.js'
 import google from './services/google.js'
 import instagram from './services/instagram.js'
 import reddit from './services/reddit.js'
+import soundcloud from './services/soundcloud.js'
 import steam from './services/steam.js'
 import telegram from './services/telegram.js'
 import twitch from './services/twitch.js'
@@ -29,6 +30,7 @@ const SERVICE_PROVIDERS = [
 	google,
 	instagram,
 	reddit,
+	soundcloud,
 	steam,
 	telegram,
 	twitch,
